@@ -14,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SagaOrchestrator {
 
-    private static final String SAGA_COMMAND_EXCHANGE = "saga-commands";
+    private static final String SAGA_COMMAND_EXCHANGE = "saga-command-exchange";
     private static final String SAGA_START_ROUTING_KEY = "saga.start";
 
     private final RabbitTemplate rabbitTemplate;
