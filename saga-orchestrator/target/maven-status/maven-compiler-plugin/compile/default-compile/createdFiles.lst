@@ -1,4 +1,5 @@
 com/example/saga/model/ShippingStates.class
+com/example/saga/outbox/OutboxMessage.class
 com/example/saga/model/SagaContext.class
 com/example/saga/model/ShippingContext.class
 com/example/saga/listener/ShippingSagaListener.class
@@ -17,6 +18,9 @@ com/example/saga/persistence/SagaHistoryRepository.class
 com/example/saga/model/ShippingContext$ShippingStatusUpdate$ShippingStatusUpdateBuilder.class
 com/example/saga/action/PaymentAction.class
 com/example/saga/retry/RetryableAction$RetryableActionBuilder.class
+com/example/saga/outbox/MessageRelay.class
+com/example/saga/outbox/OutboxMessageStatus.class
+com/example/saga/outbox/OutboxService.class
 com/example/saga/definition/OrderSagaDefinition.class
 com/example/saga/controller/SagaHistoryController.class
 com/example/saga/controller/LockManagementController.class
@@ -29,9 +33,11 @@ com/example/saga/model/ShippingContext$ShippingContextBuilder.class
 com/example/saga/listener/SagaStateChangeListener.class
 com/example/saga/persistence/SagaInstance.class
 com/example/saga/persistence/SagaHistory.class
+com/example/saga/outbox/OutboxMessage$OutboxMessageBuilder.class
 com/example/saga/dto/SagaResponse.class
 com/example/saga/listener/SagaReplyListener.class
 com/example/saga/model/SagaContext$SagaContextBuilder.class
+com/example/saga/outbox/OutboxMessageRepository.class
 com/example/saga/config/MessageConfig.class
 com/example/saga/definition/ShippingSagaDefinition$1.class
 com/example/saga/retry/RetryableAction.class

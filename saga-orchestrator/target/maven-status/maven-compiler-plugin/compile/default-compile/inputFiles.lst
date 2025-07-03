@@ -18,6 +18,7 @@
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/model/ShippingEvents.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/persistence/SagaInstanceRepository.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/service/ShippingSagaService.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/outbox/OutboxMessageStatus.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/listener/SagaStateChangeListener.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/service/SagaOrchestrationService.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/dto/SagaResponse.java
@@ -25,6 +26,8 @@
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/lock/DistributedLock.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/retry/RetryableAction.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/controller/SagaHistoryController.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/outbox/OutboxService.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/outbox/MessageRelay.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/definition/ShippingSagaDefinition.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/persistence/SagaCheckpoint.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/config/RedissonConfig.java
@@ -34,5 +37,7 @@
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/listener/SagaCommandListener.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/controller/SagaController.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/persistence/SagaHistoryRepository.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/outbox/OutboxMessage.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/definition/OrderSagaDefinition.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/model/ShippingStates.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/saga-orchestrator/src/main/java/com/example/saga/outbox/OutboxMessageRepository.java

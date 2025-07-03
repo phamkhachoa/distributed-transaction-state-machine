@@ -4,6 +4,9 @@ import com.example.saga.config.MessageConfig;
 import com.example.saga.model.SagaContext;
 import com.example.saga.model.SagaEvents;
 import com.example.saga.model.SagaStates;
+import com.example.saga.outbox.OutboxMessage;
+import com.example.saga.outbox.OutboxMessageStatus;
+import com.example.saga.outbox.OutboxService;
 import com.example.saga.persistence.SagaInstance;
 import com.example.saga.persistence.SagaInstanceRepository;
 import com.example.saga.retry.RetryableAction;
@@ -33,10 +36,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class PaymentAction implements Action<SagaStates, SagaEvents> {
 
-    private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
-    private final SagaOrchestrationService orchestrationService;
     private final SagaInstanceRepository sagaInstanceRepository;
+    private final OutboxService outboxService;
     
     private static final int MAX_RETRIES = 3;
     private static final long INITIAL_DELAY = 1000; // 1 second
@@ -103,15 +105,19 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         // Store payment ID in saga context
         payload.put("paymentId", paymentId);
         
-        // Send payment command
-        rabbitTemplate.convertAndSend(
-            MessageConfig.SAGA_COMMAND_EXCHANGE,
-            MessageConfig.PAYMENT_PROCESS_KEY,
-            objectMapper.writeValueAsString(paymentCommand)
-        );
-        
-        log.info("Payment command sent for saga: {}, order: {}, amount: {}", 
-                sagaContext.getSagaId(), payload.get("orderId"), payload.get("amount"));
+        // Save payment command to outbox
+        OutboxMessage outboxMessage = OutboxMessage.builder()
+                .aggregateType("SAGA")
+                .aggregateId(sagaContext.getSagaId())
+                .eventType("PROCESS_PAYMENT")
+                .payload(objectMapper.writeValueAsString(paymentCommand))
+                .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
+                .routingKey(MessageConfig.PAYMENT_PROCESS_KEY)
+                .status(OutboxMessageStatus.PENDING)
+                .build();
+        outboxService.saveMessage(outboxMessage);
+
+        log.info("Payment command for saga {} saved to outbox.", sagaContext.getSagaId());
     }
     
     /**
@@ -131,14 +137,18 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         refundCommand.put("timestamp", LocalDateTime.now());
         refundCommand.put("action", "REFUND");
         
-        // Send refund command
-        rabbitTemplate.convertAndSend(
-            MessageConfig.SAGA_COMMAND_EXCHANGE,
-            MessageConfig.PAYMENT_REFUND_KEY,
-            objectMapper.writeValueAsString(refundCommand)
-        );
+        // Save refund command to outbox
+        OutboxMessage outboxMessage = OutboxMessage.builder()
+                .aggregateType("SAGA")
+                .aggregateId(sagaContext.getSagaId())
+                .eventType("COMPENSATE_PAYMENT")
+                .payload(objectMapper.writeValueAsString(refundCommand))
+                .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
+                .routingKey(MessageConfig.PAYMENT_REFUND_KEY)
+                .status(OutboxMessageStatus.PENDING)
+                .build();
+        outboxService.saveMessage(outboxMessage);
         
-        log.info("Refund command sent for saga: {}, order: {}, payment: {}", 
-                sagaContext.getSagaId(), payload.get("orderId"), payload.get("paymentId"));
+        log.info("Refund command for saga {} saved to outbox.", sagaContext.getSagaId());
     }
 } 

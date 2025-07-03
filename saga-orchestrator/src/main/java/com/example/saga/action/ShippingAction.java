@@ -6,8 +6,12 @@ import com.example.saga.model.SagaEvents;
 import com.example.saga.model.SagaStates;
 import com.example.saga.model.ShippingContext;
 import com.example.saga.model.ShippingEvents;
+import com.example.saga.outbox.OutboxMessage;
+import com.example.saga.outbox.OutboxMessageStatus;
+import com.example.saga.outbox.OutboxService;
 import com.example.saga.service.SagaOrchestrationService;
 import com.example.saga.service.ShippingSagaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +32,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class ShippingAction implements Action<SagaStates, SagaEvents> {
 
-    private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
     private final SagaOrchestrationService orchestrationService;
     private final ShippingSagaService shippingSagaService;
+    private final OutboxService outboxService;
     
     // Constants for long-running shipping process
     private static final long HEARTBEAT_INTERVAL_HOURS = 4; // Check every 4 hours
@@ -84,15 +88,24 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
         shippingCommand.put("timestamp", LocalDateTime.now());
         shippingCommand.put("action", "SCHEDULE");
 
-        // Send shipping command
-        rabbitTemplate.convertAndSend(
-            MessageConfig.SAGA_COMMAND_EXCHANGE,
-            MessageConfig.SHIPPING_SCHEDULE_KEY,
-            shippingCommand
-        );
-        
-        log.info("Shipping command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), payload.get("orderId"));
+        // Save shipping command to outbox
+        try {
+            OutboxMessage outboxMessage = OutboxMessage.builder()
+                    .aggregateType("SAGA")
+                    .aggregateId(sagaContext.getSagaId())
+                    .eventType("SCHEDULE_SHIPPING")
+                    .payload(objectMapper.writeValueAsString(shippingCommand))
+                    .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
+                    .routingKey(MessageConfig.SHIPPING_SCHEDULE_KEY)
+                    .status(OutboxMessageStatus.PENDING)
+                    .build();
+            outboxService.saveMessage(outboxMessage);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize shipping command for outbox", e);
+            throw new RuntimeException(e);
+        }
+
+        log.info("Shipping command for saga {} saved to outbox.", sagaContext.getSagaId());
 
         // Start monitoring process
         startLongRunningShippingMonitoring(sagaContext);
@@ -116,14 +129,23 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
         cancelCommand.put("timestamp", LocalDateTime.now());
         cancelCommand.put("action", "CANCEL");
 
-        rabbitTemplate.convertAndSend(
-            MessageConfig.SAGA_COMMAND_EXCHANGE,
-            MessageConfig.SHIPPING_CANCEL_KEY,
-            cancelCommand
-        );
+        try {
+            OutboxMessage outboxMessage = OutboxMessage.builder()
+                    .aggregateType("SAGA")
+                    .aggregateId(sagaContext.getSagaId())
+                    .eventType("CANCEL_SHIPPING")
+                    .payload(objectMapper.writeValueAsString(cancelCommand))
+                    .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
+                    .routingKey(MessageConfig.SHIPPING_CANCEL_KEY)
+                    .status(OutboxMessageStatus.PENDING)
+                    .build();
+            outboxService.saveMessage(outboxMessage);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize shipping cancel command for outbox", e);
+            throw new RuntimeException(e);
+        }
         
-        log.info("Shipping cancellation command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), payload.get("orderId"));
+        log.info("Shipping cancellation command for saga {} saved to outbox.", sagaContext.getSagaId());
     }
     
     /**

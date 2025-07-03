@@ -4,6 +4,9 @@ import com.example.saga.config.MessageConfig;
 import com.example.saga.model.SagaContext;
 import com.example.saga.model.SagaEvents;
 import com.example.saga.model.SagaStates;
+import com.example.saga.outbox.OutboxMessage;
+import com.example.saga.outbox.OutboxMessageStatus;
+import com.example.saga.outbox.OutboxService;
 import com.example.saga.service.SagaOrchestrationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,9 +32,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class InventoryAction implements Action<SagaStates, SagaEvents> {
 
-    private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
     private final SagaOrchestrationService orchestrationService;
+    private final OutboxService outboxService;
     
     // Heartbeat interval for long-running inventory operations
     private static final long HEARTBEAT_INTERVAL_MINUTES = 5;
@@ -70,15 +73,19 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
         inventoryCommand.put("timestamp", LocalDateTime.now());
         inventoryCommand.put("action", "RESERVE");
         
-        // Send inventory command
-        rabbitTemplate.convertAndSend(
-            MessageConfig.SAGA_COMMAND_EXCHANGE,
-            MessageConfig.INVENTORY_RESERVE_KEY,
-            objectMapper.writeValueAsString(inventoryCommand)
-        );
+        // Save inventory command to outbox
+        OutboxMessage outboxMessage = OutboxMessage.builder()
+                .aggregateType("SAGA")
+                .aggregateId(sagaContext.getSagaId())
+                .eventType("RESERVE_INVENTORY")
+                .payload(objectMapper.writeValueAsString(inventoryCommand))
+                .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
+                .routingKey(MessageConfig.INVENTORY_RESERVE_KEY)
+                .status(OutboxMessageStatus.PENDING)
+                .build();
+        outboxService.saveMessage(outboxMessage);
         
-        log.info("Inventory reserve command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), payload.get("orderId"));
+        log.info("Inventory reserve command for saga {} saved to outbox.", sagaContext.getSagaId());
 
         // Start heartbeat monitoring and timeout check
         startHeartbeatMonitoring(sagaContext);
@@ -101,15 +108,19 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
         releaseCommand.put("timestamp", LocalDateTime.now());
         releaseCommand.put("action", "RELEASE");
         
-        // Send release command
-        rabbitTemplate.convertAndSend(
-            MessageConfig.SAGA_COMMAND_EXCHANGE,
-            MessageConfig.INVENTORY_RELEASE_KEY,
-            objectMapper.writeValueAsString(releaseCommand)
-        );
+        // Save release command to outbox
+        OutboxMessage outboxMessage = OutboxMessage.builder()
+                .aggregateType("SAGA")
+                .aggregateId(sagaContext.getSagaId())
+                .eventType("RELEASE_INVENTORY")
+                .payload(objectMapper.writeValueAsString(releaseCommand))
+                .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
+                .routingKey(MessageConfig.INVENTORY_RELEASE_KEY)
+                .status(OutboxMessageStatus.PENDING)
+                .build();
+        outboxService.saveMessage(outboxMessage);
         
-        log.info("Inventory release command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), payload.get("orderId"));
+        log.info("Inventory release command for saga {} saved to outbox.", sagaContext.getSagaId());
     }
 
     private void startHeartbeatMonitoring(SagaContext sagaContext) {
@@ -127,7 +138,10 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
                     heartbeatCommand.put("timestamp", LocalDateTime.now());
                     heartbeatCommand.put("action", "HEARTBEAT");
 
-                    rabbitTemplate.convertAndSend(
+                    // Heartbeat is not critical, so we can send it directly.
+                    // Alternatively, it could also go to the outbox with a lower priority.
+                    // For now, sending directly is acceptable.
+                    new RabbitTemplate().convertAndSend(
                         MessageConfig.SAGA_COMMAND_EXCHANGE,
                         MessageConfig.INVENTORY_RESERVE_KEY + ".heartbeat",
                         heartbeatCommand

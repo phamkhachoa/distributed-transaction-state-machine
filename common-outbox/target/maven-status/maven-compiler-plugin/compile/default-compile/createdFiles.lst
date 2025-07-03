@@ -1,0 +1,7 @@
+com/example/common/outbox/OutboxMessageStatus.class
+com/example/common/outbox/OutboxMessage$OutboxMessageBuilder.class
+com/example/common/outbox/OutboxService.class
+com/example/common/outbox/MessageRelay.class
+com/example/common/outbox/OutboxMessage.class
+com/example/common/outbox/OutboxMessageRepository.class
+com/example/common/outbox/OutboxAutoConfiguration.class

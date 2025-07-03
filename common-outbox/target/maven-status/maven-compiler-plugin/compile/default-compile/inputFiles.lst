@@ -1,0 +1,6 @@
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/common-outbox/src/main/java/com/example/common/outbox/OutboxAutoConfiguration.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/common-outbox/src/main/java/com/example/common/outbox/OutboxMessageRepository.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/common-outbox/src/main/java/com/example/common/outbox/OutboxMessageStatus.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/common-outbox/src/main/java/com/example/common/outbox/OutboxMessage.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/common-outbox/src/main/java/com/example/common/outbox/OutboxService.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/common-outbox/src/main/java/com/example/common/outbox/MessageRelay.java
