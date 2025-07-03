@@ -1,0 +1,79 @@
+{
+  "Name": "OrderCancellationSaga",
+  "Comment": "Saga to cancel an existing order",
+  "StartState": "CheckOrderCancellable",
+  "Version": "1.0.0",
+  "States": {
+    "CheckOrderCancellable": {
+      "Type": "ServiceTask",
+      "ServiceName": "http://order-service:8081/orders/${[orderId]}/check-cancellable",
+      "ServiceMethod": "",
+      "Method": "GET",
+      "CompensateState": "",
+      "Next": "CancelInParallel",
+      "Catch": [{
+        "Exceptions": ["java.lang.Exception"],
+        "Next": "FailCancellation"
+      }]
+    },
+    "CancelInParallel": {
+      "Type": "Parallel",
+      "Branches": [{
+          "Name": "RefundBranch",
+          "StartState": "RequestRefund",
+          "States": {
+            "RequestRefund": {
+              "Type": "ServiceTask",
+              "ServiceName": "sagaOrchestrator",
+              "ServiceMethod": "requestPaymentRefund",
+              "IsAsync": true,
+              "Input": ["${[startParams]}"],
+              "IsEnd": true
+            }
+          }
+        },
+        {
+          "Name": "RestockInventoryBranch",
+          "StartState": "RequestRestock",
+          "States": {
+            "RequestRestock": {
+              "Type": "ServiceTask",
+              "ServiceName": "http://inventory-service:8083/inventory/release",
+              "ServiceMethod": "",
+              "Method": "POST",
+              "ParameterTypes": ["java.util.Map"],
+              "Input": [{"orderId": "${[orderId]}", "items": "${[items]}"}],
+              "IsEnd": true
+            }
+          }
+        },
+        {
+          "Name": "CancelShippingBranch",
+          "StartState": "RequestShippingCancellation",
+          "States": {
+            "RequestShippingCancellation": {
+              "Type": "ServiceTask",
+              "ServiceName": "sagaOrchestrator",
+              "ServiceMethod": "requestShippingCancellation",
+              "IsAsync": true,
+              "Input": ["${[startParams]}"],
+              "IsEnd": true
+            }
+          }
+        }
+      ],
+      "Next": "MarkOrderAsCancelled"
+    },
+    "MarkOrderAsCancelled": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaOrchestrator",
+      "ServiceMethod": "markOrderAsCancelled",
+      "Input": ["${[orderId]}"],
+      "IsEnd": true
+    },
+    "FailCancellation": {
+      "Type": "Fail",
+      "Message": "Order cannot be cancelled"
+    }
+  }
+} 

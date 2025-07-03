@@ -1,0 +1,101 @@
+{
+  "Name": "HybridOrderProcessingSaga",
+  "Comment": "A hybrid saga using REST for inventory and RabbitMQ for payment/shipping",
+  "StartState": "ReserveInventory",
+  "Version": "2.0.0",
+  "States": {
+    "ReserveInventory": {
+      "Type": "ServiceTask",
+      "ServiceName": "http://inventory-service:8083/inventory/reserve",
+      "ServiceMethod": "",
+      "Method": "POST",
+      "TimeoutSeconds": 10,
+      "Retry": [{
+        "Exceptions": ["java.net.SocketTimeoutException", "org.springframework.web.client.ResourceAccessException"],
+        "IntervalSeconds": 2,
+        "MaxAttempts": 3
+      }],
+      "ParameterTypes": ["java.util.Map"],
+      "Input": [{"orderId": "${[orderId]}", "items": "${[items]}"}],
+      "CompensateState": "ReleaseInventory",
+      "Next": "ProcessPayment",
+      "Catch": [{"Exceptions": ["java.lang.Exception"], "Next": "FailOrder"}]
+    },
+    "ReleaseInventory": {
+      "Type": "ServiceTask",
+      "ServiceName": "http://inventory-service:8083/inventory/release",
+      "ServiceMethod": "",
+      "Method": "POST",
+      "ParameterTypes": ["java.util.Map"],
+      "Input": [{"orderId": "${[orderId]}", "items": "${[items]}"}]
+    },
+    "ProcessPayment": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaOrchestrator",
+      "ServiceMethod": "requestPayment",
+      "IsAsync": true,
+      "Input": ["${[startParams]}"],
+      "CompensateState": "RefundPayment",
+      "Next": "ShippingAndEmailingInParallel"
+    },
+    "RefundPayment": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaOrchestrator",
+      "ServiceMethod": "requestPaymentRefund",
+      "Input": ["${[startParams]}"]
+    },
+    "ShippingAndEmailingInParallel": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "Name": "ShippingBranch",
+          "StartState": "ScheduleShipping",
+          "States": {
+            "ScheduleShipping": {
+              "Type": "ServiceTask",
+              "ServiceName": "sagaOrchestrator",
+              "ServiceMethod": "requestShipping",
+              "IsAsync": true,
+              "Input": ["${[startParams]}"],
+              "CompensateState": "CancelShipping",
+              "IsEnd": true
+            },
+            "CancelShipping": {
+              "Type": "ServiceTask",
+              "ServiceName": "sagaOrchestrator",
+              "ServiceMethod": "requestShippingCancellation",
+              "Input": ["${[startParams]}"]
+            }
+          }
+        },
+        {
+          "Name": "EmailingBranch",
+          "StartState": "SendConfirmationEmail",
+          "States": {
+            "SendConfirmationEmail": {
+              "Type": "ServiceTask",
+              "ServiceName": "sagaOrchestrator",
+              "ServiceMethod": "requestEmailNotification",
+              "Input": ["${[startParams]}"],
+              "IsEnd": true
+            }
+          }
+        }
+      ],
+      "Next": "CompleteOrder"
+    },
+    "ScheduleShipping": null,
+    "CancelShipping": null,
+    "CompleteOrder": {
+      "Type": "ServiceTask",
+      "ServiceName": "sagaOrchestrator",
+      "ServiceMethod": "completeOrder",
+      "Input": ["${[orderId]}"],
+      "IsEnd": true
+    },
+    "FailOrder": {
+      "Type": "Compensate",
+      "IsEnd": true
+    }
+  }
+} 
