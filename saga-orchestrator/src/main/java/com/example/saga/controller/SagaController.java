@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +60,7 @@ public class SagaController {
         log.info("Getting saga status for: {}", sagaId);
         
         // Get saga instance
-        SagaInstance instance = orchestrationService.getSagaInstance(sagaId);
+        SagaInstance instance = sagaInstanceRepository.findById(sagaId).orElse(null);
         if (instance == null) {
             return ResponseEntity.notFound().build();
         }
@@ -88,7 +89,8 @@ public class SagaController {
         log.info("Getting sagas for order: {}", orderId);
         
         // Find sagas by order ID
-        List<SagaInstance> instances = orchestrationService.findSagasByOrderId(orderId);
+        List<SagaInstance> instances = List.of(sagaInstanceRepository.findByOrderId(orderId).orElse(null))
+                .stream().filter(Objects::nonNull).collect(Collectors.toList());
         
         // Map to response format
         List<Map<String, Object>> response = instances.stream()
@@ -125,7 +127,7 @@ public class SagaController {
         log.info("Getting all active sagas");
         
         // Get all active sagas
-        List<SagaInstance> instances = orchestrationService.findActiveSagas();
+        List<SagaInstance> instances = sagaInstanceRepository.findByStatus("ACTIVE");
         
         // Map to response format
         List<Map<String, Object>> response = instances.stream()

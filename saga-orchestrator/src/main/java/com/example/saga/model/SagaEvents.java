@@ -4,46 +4,35 @@ package com.example.saga.model;
  * Events that can be triggered in a saga state machine
  */
 public enum SagaEvents {
-    // Order creation events
+    // Lifecycle events
     START_SAGA,
-    VALIDATE_ORDER,
-    ORDER_VALIDATED,
-    ORDER_VALIDATION_FAILED,
+    SAGA_COMPLETED,
+    SAGA_FAILED,
+    SAGA_CANCELLED,
+    COMPENSATE,
+    RESUME,
     
     // Payment events
-    PROCESS_PAYMENT,
-    PAYMENT_COMPLETED,
-    PAYMENT_FAILED,
     PAYMENT_SUCCESS,
+    PAYMENT_FAILED,
     PAYMENT_TIMEOUT,
+    PAYMENT_COMPENSATED,
     
     // Inventory events
-    RESERVE_INVENTORY,
-    INVENTORY_RESERVED,
-    INVENTORY_FAILED,
-    INVENTORY_INSUFFICIENT,
-    INVENTORY_TIMEOUT,
     START_INVENTORY,
+    INVENTORY_RESERVED,
+    INVENTORY_INSUFFICIENT,
+    INVENTORY_FAILED,
+    INVENTORY_TIMEOUT,
+    INVENTORY_COMPENSATED,
     
     // Shipping events
     START_SHIPPING,
     SHIPPING_SCHEDULED,
     SHIPPING_FAILED,
     SHIPPING_TIMEOUT,
-    
-    // Compensation events
-    COMPENSATE_PAYMENT,
-    COMPENSATE_INVENTORY,
-    COMPENSATE_SHIPPING,
-    PAYMENT_COMPENSATED,
-    INVENTORY_COMPENSATED,
     SHIPPING_COMPENSATED,
     
     // Completion events
-    COMPLETE_SAGA,
-    SAGA_COMPLETED,
-    SAGA_FAILED,
-    
-    // Timeout events
-    TIMEOUT_SAGA
+    COMPLETE_SAGA
 } 

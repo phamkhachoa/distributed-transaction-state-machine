@@ -1,9 +1,13 @@
 package com.example.saga.listener;
 
+import com.example.saga.model.SagaContext;
+import com.example.saga.model.SagaEvents;
+import com.example.saga.model.SagaStates;
 import com.example.saga.persistence.SagaHistory;
 import com.example.saga.persistence.SagaHistoryRepository;
 import com.example.saga.persistence.SagaInstance;
 import com.example.saga.persistence.SagaInstanceRepository;
+import com.example.saga.service.SagaOrchestrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,7 @@ public class SagaStateChangeListener<S extends Enum<S>, E extends Enum<E>>
     private final SagaHistoryRepository historyRepository;
     private final SagaInstanceRepository instanceRepository;
     private final ObjectMapper objectMapper;
+    private final SagaOrchestrationService orchestrationService;
     private static final String INSTANCE_ID = System.getenv().getOrDefault("HOSTNAME", "unknown");
     
     private ThreadLocal<Long> startTime = new ThreadLocal<>();
@@ -45,32 +50,22 @@ public class SagaStateChangeListener<S extends Enum<S>, E extends Enum<E>>
             State<S, E> source = transition.getSource();
             State<S, E> target = transition.getTarget();
             E event = transition.getTrigger().getEvent();
-            String sagaId = transition.getStateMachine().getId();
-            
-            // Get saga instance
-            SagaInstance sagaInstance = instanceRepository.findById(sagaId)
-                    .orElseThrow(() -> new RuntimeException("Saga instance not found: " + sagaId));
+            String sagaId = "unknown"; // fallback saga ID
             
             // Calculate execution time
-            long executionTime = System.currentTimeMillis() - startTime.get();
-            startTime.remove();
+            long executionTime = System.currentTimeMillis() - (startTime.get() != null ? startTime.get() : 0);
+            if (startTime.get() != null) {
+                startTime.remove();
+            }
             
-            // Get action result and error if any
-            Object actionResult = transition.getStateMachine()
-                    .getExtendedState().getVariables().get("actionResult");
-            Object actionError = transition.getStateMachine()
-                    .getExtendedState().getVariables().get("actionError");
-            
-            // Create history entry
+            // Create history entry with basic information
             SagaHistory history = SagaHistory.builder()
                     .sagaId(sagaId)
-                    .sagaType(sagaInstance.getSagaType())
+                    .sagaType("ORDER_SAGA")
                     .sourceState(source.getId().name())
                     .targetState(target.getId().name())
                     .event(event != null ? event.name() : "INTERNAL")
                     .actionName(getActionName(transition))
-                    .actionResult(actionResult != null ? objectMapper.writeValueAsString(actionResult) : null)
-                    .errorMessage(actionError != null ? actionError.toString() : null)
                     .executionTimeMs(executionTime)
                     .instanceId(INSTANCE_ID)
                     .isCompensation(isCompensationTransition(source.getId().name(), target.getId().name()))
@@ -78,19 +73,8 @@ public class SagaStateChangeListener<S extends Enum<S>, E extends Enum<E>>
             
             historyRepository.save(history);
             
-            // Add checkpoint to saga instance
-            sagaInstance.addCheckpoint(
-                target.getId().name(),
-                event != null ? event.name() : "INTERNAL",
-                actionResult != null ? objectMapper.writeValueAsString(actionResult) : null
-            );
-            
-            // Update saga instance
-            sagaInstance.setCurrentState(target.getId().name());
-            instanceRepository.save(sagaInstance);
-            
-            log.info("Recorded transition for saga {}: {} -> {} by event {} in {}ms", 
-                    sagaId, source.getId(), target.getId(), event, executionTime);
+            log.info("Recorded transition: {} -> {} by event {} in {}ms", 
+                    source.getId(), target.getId(), event, executionTime);
             
         } catch (Exception e) {
             log.error("Error recording saga transition", e);
@@ -98,9 +82,8 @@ public class SagaStateChangeListener<S extends Enum<S>, E extends Enum<E>>
     }
     
     private String getActionName(Transition<S, E> transition) {
-        if (transition.getTrigger() != null && 
-            transition.getTrigger().getAction() != null) {
-            return transition.getTrigger().getAction().getClass().getSimpleName();
+        if (transition.getActions() != null && !transition.getActions().isEmpty()) {
+            return transition.getActions().iterator().next().getClass().getSimpleName();
         }
         return null;
     }
@@ -109,4 +92,6 @@ public class SagaStateChangeListener<S extends Enum<S>, E extends Enum<E>>
         return targetState.startsWith("COMPENSATING_") || 
                sourceState.startsWith("COMPENSATING_");
     }
+
+
 } 

@@ -114,7 +114,7 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 // Check current state
-                SagaContext currentContext = orchestrationService.getSagaContext(sagaContext.getSagaId());
+                SagaContext currentContext = (SagaContext) orchestrationService.getSagaContext(sagaContext.getSagaId());
                 SagaStates currentState = orchestrationService.getCurrentState(sagaContext.getSagaId());
                 
                 // Only continue heartbeat if still in INVENTORY_RESERVING state
@@ -148,7 +148,7 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
         scheduler.schedule(() -> {
             try {
                 // Check if still in inventory reserving state
-                SagaContext currentContext = orchestrationService.getSagaContext(sagaContext.getSagaId());
+                SagaContext currentContext = (SagaContext) orchestrationService.getSagaContext(sagaContext.getSagaId());
                 if (currentContext.getStatus().equals("IN_PROGRESS") && 
                     orchestrationService.getCurrentState(sagaContext.getSagaId()) == SagaStates.INVENTORY_RESERVING) {
                     

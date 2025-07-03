@@ -1,161 +1,116 @@
 package com.example.saga.service;
 
-import com.example.saga.model.SagaStates;
-import com.example.saga.persistence.SagaCheckpoint;
+import com.example.saga.model.SagaContext;
+import com.example.saga.model.SagaEvents;
 import com.example.saga.persistence.SagaInstance;
 import com.example.saga.persistence.SagaInstanceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Service for saga recovery and monitoring
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SagaRecoveryService {
 
-    private final SagaInstanceRepository sagaInstanceRepository;
     private final SagaOrchestrationService orchestrationService;
+    private final SagaInstanceRepository sagaInstanceRepository;
     
-    private static final long STUCK_SAGA_THRESHOLD_MINUTES = 30;
-    private static final int MAX_RECOVERY_ATTEMPTS = 3;
-
-    /**
-     * Scheduled job to detect and recover stuck sagas
-     */
-    @Scheduled(fixedRate = 300000) // Run every 5 minutes
-    @Transactional
-    public void recoverStuckSagas() {
-        LocalDateTime threshold = LocalDateTime.now().minusMinutes(STUCK_SAGA_THRESHOLD_MINUTES);
+    // Check for stuck sagas every 5 minutes
+    @Scheduled(fixedRate = 300000)
+    public void checkStuckSagas() {
+        log.debug("Checking for stuck sagas...");
         
-        List<SagaInstance> stuckSagas = sagaInstanceRepository.findStuckSagas(
-            threshold, "IN_PROGRESS");
-            
-        log.info("Found {} stuck sagas for recovery", stuckSagas.size());
+        // Find sagas that haven't been updated in the last 30 minutes
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(30);
+        List<SagaInstance> stuckSagas = sagaInstanceRepository.findStuckSagas(cutoffTime, "ACTIVE");
         
         for (SagaInstance saga : stuckSagas) {
-            try {
-                recoverSaga(saga);
-            } catch (Exception e) {
-                log.error("Failed to recover saga: {}", saga.getId(), e);
-            }
+            log.warn("Found stuck saga: {} in state: {}", saga.getId(), saga.getCurrentState());
+            recoverSaga(saga);
         }
     }
-
+    
+    // Check for failed sagas every hour
+    @Scheduled(fixedRate = 3600000)
+    public void checkFailedSagas() {
+        log.debug("Checking for failed sagas...");
+        
+        List<SagaInstance> failedSagas = sagaInstanceRepository.findByStatus("FAILED");
+        
+        for (SagaInstance saga : failedSagas) {
+            log.warn("Found failed saga: {} - considering compensation", saga.getId());
+            compensateFailedSaga(saga);
+        }
+    }
+    
     /**
-     * Recover a specific saga instance
+     * Attempt to recover a stuck saga
      */
-    @Transactional
-    public void recoverSaga(SagaInstance saga) {
-        log.info("Starting recovery for saga: {}", saga.getId());
+    public boolean recoverSaga(SagaInstance instance) {
+        log.info("Attempting to recover saga: {}", instance.getId());
         
-        // Get last valid checkpoint
-        SagaCheckpoint lastValidCheckpoint = getLastValidCheckpoint(saga);
-        
-        if (lastValidCheckpoint == null) {
-            log.warn("No valid checkpoint found for saga: {}, initiating compensation", 
-                saga.getId());
-            initiateCompensation(saga);
-            return;
-        }
-        
-        // Check if we should retry or compensate
-        if (saga.canRetry(MAX_RECOVERY_ATTEMPTS)) {
-            retryFromCheckpoint(saga, lastValidCheckpoint);
-        } else {
-            log.warn("Saga {} exceeded max recovery attempts, initiating compensation", 
-                saga.getId());
-            initiateCompensation(saga);
-        }
-    }
-
-    private SagaCheckpoint getLastValidCheckpoint(SagaInstance saga) {
-        return saga.getCheckpoints().stream()
-            .filter(cp -> cp.getErrorMessage() == null)
-            .reduce((first, second) -> second)
-            .orElse(null);
-    }
-
-    private void retryFromCheckpoint(SagaInstance saga, SagaCheckpoint checkpoint) {
-        log.info("Retrying saga {} from state: {}", saga.getId(), checkpoint.getState());
-        
-        // Update saga state
-        saga.setCurrentState(checkpoint.getState());
-        saga.incrementRetryCount();
-        sagaInstanceRepository.save(saga);
-        
-        // Reconstruct state machine
-        orchestrationService.reconstructStateMachine(saga.getId(), checkpoint.getState());
-        
-        // Resume processing
         try {
-            orchestrationService.resumeSaga(saga.getId());
-            log.info("Successfully resumed saga {} from checkpoint", saga.getId());
+            // Find saga context and current state
+            String sagaId = instance.getId();
+            SagaContext context = (SagaContext) orchestrationService.getSagaContext(sagaId);
+            
+            // Start new saga with context to resume
+            orchestrationService.startSaga("ORDER_SAGA", context);
+            
+            // Resume the saga from the current state
+            orchestrationService.sendEvent(sagaId, SagaEvents.START_SAGA);
+            
+            // Update instance status
+            instance.setStatus("ACTIVE");
+            sagaInstanceRepository.save(instance);
+            
+            log.info("Successfully recovered saga: {}", sagaId);
+            return true;
+            
         } catch (Exception e) {
-            log.error("Failed to resume saga: {}", saga.getId(), e);
-            if (!saga.canRetry(MAX_RECOVERY_ATTEMPTS)) {
-                initiateCompensation(saga);
-            }
+            log.error("Failed to recover saga: {}", instance.getId(), e);
+            return false;
         }
     }
-
-    private void initiateCompensation(SagaInstance saga) {
-        log.info("Initiating compensation for saga: {}", saga.getId());
-        
-        // Find the last successful state to start compensation from
-        String lastSuccessfulState = getLastValidCheckpoint(saga).getState();
-        
-        // Start compensation process
-        saga.startCompensation(lastSuccessfulState);
-        sagaInstanceRepository.save(saga);
+    
+    /**
+     * Start compensation for a failed saga
+     */
+    private void compensateFailedSaga(SagaInstance saga) {
+        String lastSuccessfulState = getLastSuccessfulState(saga);
         
         try {
-            // Trigger compensation flow in state machine
-            orchestrationService.startCompensation(saga.getId(), lastSuccessfulState);
-            log.info("Successfully started compensation for saga: {}", saga.getId());
+            // Find saga context
+            String sagaId = saga.getId();
+            SagaContext context = (SagaContext) orchestrationService.getSagaContext(sagaId);
+            
+            // Start compensation from the current state
+            orchestrationService.sendEvent(sagaId, SagaEvents.SAGA_FAILED);
+            
+            // Update instance status
+            saga.setStatus("COMPENSATING");
+            sagaInstanceRepository.save(saga);
+            
+            log.info("Started compensation for saga: {}", sagaId);
+            
         } catch (Exception e) {
             log.error("Failed to start compensation for saga: {}", saga.getId(), e);
-            // Mark as failed and requiring manual intervention
-            saga.setStatus("FAILED_COMPENSATION_REQUIRED");
-            saga.setErrorMessage("Failed to start compensation: " + e.getMessage());
-            sagaInstanceRepository.save(saga);
         }
     }
-
-    /**
-     * Check health of active sagas
-     */
-    @Scheduled(fixedRate = 60000) // Run every minute
-    public void checkSagaHealth() {
-        List<SagaInstance> activeSagas = sagaInstanceRepository
-            .findByStatus("IN_PROGRESS");
-            
-        for (SagaInstance saga : activeSagas) {
-            if (isStuck(saga)) {
-                log.warn("Detected potentially stuck saga: {}", saga.getId());
-                // Add to monitoring queue
-                monitorSaga(saga);
-            }
+    
+    private String getLastSuccessfulState(SagaInstance saga) {
+        // Get the last successful state from checkpoints
+        if (saga.getCheckpoints() != null && !saga.getCheckpoints().isEmpty()) {
+            return saga.getCheckpoints().get(saga.getCheckpoints().size() - 1).getState();
         }
-    }
-
-    private boolean isStuck(SagaInstance saga) {
-        LocalDateTime lastUpdate = saga.getUpdatedAt();
-        LocalDateTime threshold = LocalDateTime.now()
-            .minusMinutes(STUCK_SAGA_THRESHOLD_MINUTES);
-        return lastUpdate.isBefore(threshold);
-    }
-
-    private void monitorSaga(SagaInstance saga) {
-        // Add monitoring metadata
-        saga.addMetadata("monitoring_start", LocalDateTime.now().toString());
-        saga.addMetadata("monitoring_reason", "Potential stuck state detected");
-        sagaInstanceRepository.save(saga);
-        
-        // Could integrate with external monitoring system here
+        return "STARTED";
     }
 } 
