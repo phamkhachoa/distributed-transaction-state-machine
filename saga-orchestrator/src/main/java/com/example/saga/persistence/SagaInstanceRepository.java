@@ -15,8 +15,6 @@ import java.util.Optional;
 @Repository
 public interface SagaInstanceRepository extends JpaRepository<SagaInstance, String> {
     
-    Optional<SagaInstance> findByOrderId(String orderId);
-    
     List<SagaInstance> findByStatus(String status);
     
     List<SagaInstance> findByStatusNot(String status);
@@ -62,10 +60,4 @@ public interface SagaInstanceRepository extends JpaRepository<SagaInstance, Stri
      * Find sagas that have timed out
      */
     List<SagaInstance> findByTimeoutAtBeforeAndStatus(LocalDateTime now, String status);
-    
-    /**
-     * Find sagas by metadata key and value
-     */
-    @Query("SELECT s FROM SagaInstance s JOIN s.metadata m WHERE KEY(m) = :key AND VALUE(m) = :value")
-    List<SagaInstance> findByMetadata(@Param("key") String key, @Param("value") String value);
 } 

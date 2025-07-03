@@ -92,7 +92,7 @@ public class ShippingSagaListener {
                 SagaContext sagaContext = (SagaContext) orchestrationService.getSagaContext(saga.getId());
                 
                 // Check if this is the parent saga
-                if (shippingContext.getSagaId().equals(sagaContext.getShippingSagaId())) {
+                if (shippingContext.getSagaId().equals(sagaContext.getPayload().get("shippingSagaId"))) {
                     orderSaga = saga;
                     break;
                 }

@@ -43,13 +43,13 @@ public class OrderSagaDefinition implements SagaDefinition<SagaStates, SagaEvent
 
     @Override
     public void validateContext(Object context) {
-        if (!(context instanceof SagaContext)) {
+        if (!(context instanceof SagaContext sagaContext)) {
             throw new IllegalArgumentException("Context must be of type SagaContext");
         }
-        SagaContext sagaContext = (SagaContext) context;
-        if (sagaContext.getOrderId() == null || sagaContext.getUserId() == null || 
-            sagaContext.getAmount() == null || sagaContext.getProducts() == null) {
-            throw new IllegalArgumentException("Missing required fields in saga context");
+        var payload = sagaContext.getPayload();
+        if (payload == null || !payload.containsKey("orderId") || !payload.containsKey("userId") ||
+            !payload.containsKey("amount") || !payload.containsKey("products")) {
+            throw new IllegalArgumentException("Missing required fields in saga context payload: requires orderId, userId, amount, products");
         }
     }
 

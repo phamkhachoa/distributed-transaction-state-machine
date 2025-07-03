@@ -84,14 +84,15 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
      * Process payment for an order
      */
     private void processPayment(SagaContext sagaContext) throws JsonProcessingException {
-        log.info("Processing payment for order: {}", sagaContext.getOrderId());
+        var payload = sagaContext.getPayload();
+        log.info("Processing payment for order: {}", payload.get("orderId"));
         
         // Create payment command
         Map<String, Object> paymentCommand = new HashMap<>();
         paymentCommand.put("sagaId", sagaContext.getSagaId());
-        paymentCommand.put("orderId", sagaContext.getOrderId());
-        paymentCommand.put("userId", sagaContext.getUserId());
-        paymentCommand.put("amount", sagaContext.getAmount());
+        paymentCommand.put("orderId", payload.get("orderId"));
+        paymentCommand.put("userId", payload.get("userId"));
+        paymentCommand.put("amount", payload.get("amount"));
         paymentCommand.put("timestamp", LocalDateTime.now());
         paymentCommand.put("action", "PROCESS");
         
@@ -100,7 +101,7 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         paymentCommand.put("paymentId", paymentId);
         
         // Store payment ID in saga context
-        sagaContext.setPaymentId(paymentId);
+        payload.put("paymentId", paymentId);
         
         // Send payment command
         rabbitTemplate.convertAndSend(
@@ -110,22 +111,23 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         );
         
         log.info("Payment command sent for saga: {}, order: {}, amount: {}", 
-                sagaContext.getSagaId(), sagaContext.getOrderId(), sagaContext.getAmount());
+                sagaContext.getSagaId(), payload.get("orderId"), payload.get("amount"));
     }
     
     /**
      * Compensate payment (refund)
      */
     private void compensatePayment(SagaContext sagaContext) throws JsonProcessingException {
-        log.info("Compensating payment for order: {}", sagaContext.getOrderId());
+        var payload = sagaContext.getPayload();
+        log.info("Compensating payment for order: {}", payload.get("orderId"));
         
         // Create refund command
         Map<String, Object> refundCommand = new HashMap<>();
         refundCommand.put("sagaId", sagaContext.getSagaId());
-        refundCommand.put("orderId", sagaContext.getOrderId());
-        refundCommand.put("userId", sagaContext.getUserId());
-        refundCommand.put("paymentId", sagaContext.getPaymentId());
-        refundCommand.put("amount", sagaContext.getAmount());
+        refundCommand.put("orderId", payload.get("orderId"));
+        refundCommand.put("userId", payload.get("userId"));
+        refundCommand.put("paymentId", payload.get("paymentId"));
+        refundCommand.put("amount", payload.get("amount"));
         refundCommand.put("timestamp", LocalDateTime.now());
         refundCommand.put("action", "REFUND");
         
@@ -137,6 +139,6 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         );
         
         log.info("Refund command sent for saga: {}, order: {}, payment: {}", 
-                sagaContext.getSagaId(), sagaContext.getOrderId(), sagaContext.getPaymentId());
+                sagaContext.getSagaId(), payload.get("orderId"), payload.get("paymentId"));
     }
 } 

@@ -41,7 +41,7 @@ public class SagaReplyListener {
             
             // Update payment information
             if (reply.containsKey("paymentId")) {
-                sagaContext.setPaymentId((String) reply.get("paymentId"));
+                sagaContext.getPayload().put("paymentId", reply.get("paymentId"));
             }
             
             // Update saga context
@@ -101,8 +101,8 @@ public class SagaReplyListener {
             }
             
             // Update inventory information
-            if (reply.containsKey("reservationId")) {
-                sagaContext.setInventoryReservationId((String) reply.get("reservationId"));
+            if (reply.containsKey("inventoryReservationId")) {
+                sagaContext.getPayload().put("inventoryReservationId", reply.get("inventoryReservationId"));
             }
             
             // Update saga context
@@ -163,7 +163,7 @@ public class SagaReplyListener {
             
             // Update shipping information
             if (reply.containsKey("shippingId")) {
-                sagaContext.setShippingId((String) reply.get("shippingId"));
+                sagaContext.getPayload().put("shippingId", reply.get("shippingId"));
             }
             
             // Update saga context

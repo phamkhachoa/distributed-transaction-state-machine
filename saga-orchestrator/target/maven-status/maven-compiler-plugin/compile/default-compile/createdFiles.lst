@@ -10,6 +10,7 @@ com/example/saga/lock/DistributedLockImpl.class
 com/example/saga/config/StateMachineConfig$1.class
 com/example/saga/service/SagaRecoveryService.class
 com/example/saga/definition/ShippingSagaDefinition.class
+com/example/saga/listener/SagaCommandListener.class
 com/example/saga/persistence/SagaInstanceRepository.class
 com/example/saga/lock/DistributedLock.class
 com/example/saga/persistence/SagaHistoryRepository.class
@@ -37,6 +38,7 @@ com/example/saga/retry/RetryableAction.class
 com/example/saga/persistence/SagaHistory$SagaHistoryBuilder.class
 com/example/saga/config/StateMachineConfig.class
 com/example/saga/service/ShippingSagaService.class
+com/example/saga/listener/SagaCommandListener$1.class
 com/example/saga/SagaOrchestratorApplication.class
 com/example/saga/lock/RedissonDistributedLock.class
 com/example/saga/persistence/SagaCheckpoint$SagaCheckpointBuilder.class

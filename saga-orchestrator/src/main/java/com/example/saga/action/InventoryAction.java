@@ -59,13 +59,14 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
      * Reserve inventory for an order
      */
     private void reserveInventory(SagaContext sagaContext) throws JsonProcessingException {
-        log.info("Reserving inventory for order: {}", sagaContext.getOrderId());
+        var payload = sagaContext.getPayload();
+        log.info("Reserving inventory for order: {}", payload.get("orderId"));
         
         // Create inventory command
         Map<String, Object> inventoryCommand = new HashMap<>();
         inventoryCommand.put("sagaId", sagaContext.getSagaId());
-        inventoryCommand.put("orderId", sagaContext.getOrderId());
-        inventoryCommand.put("products", sagaContext.getProducts());
+        inventoryCommand.put("orderId", payload.get("orderId"));
+        inventoryCommand.put("products", payload.get("products"));
         inventoryCommand.put("timestamp", LocalDateTime.now());
         inventoryCommand.put("action", "RESERVE");
         
@@ -77,7 +78,7 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
         );
         
         log.info("Inventory reserve command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), sagaContext.getOrderId());
+                sagaContext.getSagaId(), payload.get("orderId"));
 
         // Start heartbeat monitoring and timeout check
         startHeartbeatMonitoring(sagaContext);
@@ -88,14 +89,15 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
      * Release inventory (compensation)
      */
     private void releaseInventory(SagaContext sagaContext) throws JsonProcessingException {
-        log.info("Releasing inventory for order: {}", sagaContext.getOrderId());
+        var payload = sagaContext.getPayload();
+        log.info("Releasing inventory for order: {}", payload.get("orderId"));
         
         // Create release command
         Map<String, Object> releaseCommand = new HashMap<>();
         releaseCommand.put("sagaId", sagaContext.getSagaId());
-        releaseCommand.put("orderId", sagaContext.getOrderId());
-        releaseCommand.put("inventoryReservationId", sagaContext.getInventoryReservationId());
-        releaseCommand.put("products", sagaContext.getProducts());
+        releaseCommand.put("orderId", payload.get("orderId"));
+        releaseCommand.put("inventoryReservationId", payload.get("inventoryReservationId"));
+        releaseCommand.put("products", payload.get("products"));
         releaseCommand.put("timestamp", LocalDateTime.now());
         releaseCommand.put("action", "RELEASE");
         
@@ -107,7 +109,7 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
         );
         
         log.info("Inventory release command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), sagaContext.getOrderId());
+                sagaContext.getSagaId(), payload.get("orderId"));
     }
 
     private void startHeartbeatMonitoring(SagaContext sagaContext) {
@@ -121,7 +123,7 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
                 if (currentState == SagaStates.INVENTORY_RESERVING) {
                     Map<String, Object> heartbeatCommand = new HashMap<>();
                     heartbeatCommand.put("sagaId", sagaContext.getSagaId());
-                    heartbeatCommand.put("orderId", sagaContext.getOrderId());
+                    heartbeatCommand.put("orderId", sagaContext.getPayload().get("orderId"));
                     heartbeatCommand.put("timestamp", LocalDateTime.now());
                     heartbeatCommand.put("action", "HEARTBEAT");
 
@@ -132,7 +134,7 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
                     );
                     
                     log.debug("Sent heartbeat for inventory reservation - saga: {}, order: {}", 
-                            sagaContext.getSagaId(), sagaContext.getOrderId());
+                            sagaContext.getSagaId(), sagaContext.getPayload().get("orderId"));
                 } else {
                     // Stop heartbeat if no longer in reserving state
                     throw new InterruptedException("Inventory reservation completed or failed");
@@ -149,11 +151,13 @@ public class InventoryAction implements Action<SagaStates, SagaEvents> {
             try {
                 // Check if still in inventory reserving state
                 SagaContext currentContext = (SagaContext) orchestrationService.getSagaContext(sagaContext.getSagaId());
-                if (currentContext.getStatus().equals("IN_PROGRESS") && 
+                String status = (String) currentContext.getPayload().get("status");
+
+                if ("IN_PROGRESS".equals(status) &&
                     orchestrationService.getCurrentState(sagaContext.getSagaId()) == SagaStates.INVENTORY_RESERVING) {
                     
                     log.warn("Inventory reservation timeout for saga: {}, order: {}", 
-                            sagaContext.getSagaId(), sagaContext.getOrderId());
+                            sagaContext.getSagaId(), sagaContext.getPayload().get("orderId"));
                     
                     // Send timeout event
                     orchestrationService.sendEvent(sagaContext.getSagaId(), SagaEvents.INVENTORY_TIMEOUT);

@@ -56,10 +56,11 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
     }
 
     private void initiateShipping(SagaContext sagaContext) {
+        var payload = sagaContext.getPayload();
         // Create ShippingContext from SagaContext
         ShippingContext shippingContext = ShippingContext.builder()
-                .orderId(sagaContext.getOrderId())
-                .shippingAddress(sagaContext.getShippingAddress())
+                .orderId(String.valueOf(payload.get("orderId")))
+                .shippingAddress((String) payload.get("shippingAddress"))
                 .startTime(LocalDateTime.now())
                 .build();
         
@@ -67,7 +68,7 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
         String shippingSagaId = shippingSagaService.startShippingSaga(shippingContext);
         
         // Store shipping saga ID in order saga context
-        sagaContext.setShippingSagaId(shippingSagaId);
+        payload.put("shippingSagaId", shippingSagaId);
         orchestrationService.updateSagaContext(sagaContext.getSagaId(), sagaContext);
         
         log.info("Started shipping saga {} for order saga {}", 
@@ -77,9 +78,9 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
         Map<String, Object> shippingCommand = new HashMap<>();
         shippingCommand.put("sagaId", sagaContext.getSagaId());
         shippingCommand.put("shippingSagaId", shippingSagaId);
-        shippingCommand.put("orderId", sagaContext.getOrderId());
-        shippingCommand.put("userId", sagaContext.getUserId());
-        shippingCommand.put("products", sagaContext.getProducts());
+        shippingCommand.put("orderId", payload.get("orderId"));
+        shippingCommand.put("userId", payload.get("userId"));
+        shippingCommand.put("products", payload.get("products"));
         shippingCommand.put("timestamp", LocalDateTime.now());
         shippingCommand.put("action", "SCHEDULE");
 
@@ -91,26 +92,27 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
         );
         
         log.info("Shipping command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), sagaContext.getOrderId());
+                sagaContext.getSagaId(), payload.get("orderId"));
 
         // Start monitoring process
         startLongRunningShippingMonitoring(sagaContext);
     }
 
     private void cancelShipping(SagaContext sagaContext) {
+        var payload = sagaContext.getPayload();
         // If there's a shipping saga, cancel it
-        if (sagaContext.getShippingSagaId() != null) {
+        if (payload.get("shippingSagaId") != null) {
             orchestrationService.sendEvent(
-                sagaContext.getShippingSagaId(), 
+                (String) payload.get("shippingSagaId"),
                 ShippingEvents.CANCEL_SHIPPING
             );
-            log.info("Sent cancel event to shipping saga: {}", sagaContext.getShippingSagaId());
+            log.info("Sent cancel event to shipping saga: {}", payload.get("shippingSagaId"));
         }
 
         Map<String, Object> cancelCommand = new HashMap<>();
         cancelCommand.put("sagaId", sagaContext.getSagaId());
-        cancelCommand.put("orderId", sagaContext.getOrderId());
-        cancelCommand.put("shippingId", sagaContext.getShippingId());
+        cancelCommand.put("orderId", payload.get("orderId"));
+        cancelCommand.put("shippingId", payload.get("shippingId"));
         cancelCommand.put("timestamp", LocalDateTime.now());
         cancelCommand.put("action", "CANCEL");
 
@@ -121,7 +123,7 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
         );
         
         log.info("Shipping cancellation command sent for saga: {}, order: {}", 
-                sagaContext.getSagaId(), sagaContext.getOrderId());
+                sagaContext.getSagaId(), payload.get("orderId"));
     }
     
     /**
@@ -147,14 +149,14 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
                     orchestrationService.getSagaContext(sagaContext.getSagaId());
             
             // Check if shipping saga is still active
-            if (updatedContext.getShippingSagaId() != null) {
+            if (updatedContext.getPayload().get("shippingSagaId") != null) {
                 // Get shipping saga status
-                Object shippingContext = 
-                        orchestrationService.getSagaContext(updatedContext.getShippingSagaId());
+                Object shippingContext =
+                        orchestrationService.getSagaContext((String) updatedContext.getPayload().get("shippingSagaId"));
                 
                 // Log current status
                 log.info("Shipping status check for saga: {}, shipping saga: {}", 
-                        sagaContext.getSagaId(), updatedContext.getShippingSagaId());
+                        sagaContext.getSagaId(), updatedContext.getPayload().get("shippingSagaId"));
                 
                 // Schedule next check
                 scheduler.schedule(() -> {
@@ -177,9 +179,9 @@ public class ShippingAction implements Action<SagaStates, SagaEvents> {
             SagaContext sagaContext = (SagaContext) orchestrationService.getSagaContext(orderSagaId);
             
             // Verify this is the correct shipping saga
-            if (!shippingSagaId.equals(sagaContext.getShippingSagaId())) {
+            if (!shippingSagaId.equals(sagaContext.getPayload().get("shippingSagaId"))) {
                 log.warn("Shipping saga ID mismatch for order saga {}: expected {}, got {}", 
-                        orderSagaId, sagaContext.getShippingSagaId(), shippingSagaId);
+                        orderSagaId, sagaContext.getPayload().get("shippingSagaId"), shippingSagaId);
                 return;
             }
             

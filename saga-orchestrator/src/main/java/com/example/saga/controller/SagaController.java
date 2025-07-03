@@ -37,7 +37,7 @@ public class SagaController {
      */
     @PostMapping
     public ResponseEntity<Map<String, String>> startSaga(@RequestBody SagaContext sagaContext) {
-        log.info("Starting new saga for order: {}", sagaContext.getOrderId());
+        log.info("Starting new saga for order: {}", sagaContext.getPayload().get("orderId"));
         
         // Start the saga with the ORDER_SAGA type
         String sagaId = orchestrationService.startSaga("ORDER_SAGA", (Object) sagaContext);
@@ -76,7 +76,9 @@ public class SagaController {
         response.put("status", instance.getStatus());
         response.put("createdAt", instance.getCreatedAt());
         response.put("updatedAt", instance.getUpdatedAt());
-        response.put("orderId", context.getOrderId());
+        if (context != null && context.getPayload() != null) {
+            response.put("orderId", context.getPayload().get("orderId"));
+        }
         
         return ResponseEntity.ok(response);
     }
@@ -87,11 +89,9 @@ public class SagaController {
     @GetMapping("/order/{orderId}")
     public ResponseEntity<List<Map<String, Object>>> getSagasByOrderId(@PathVariable String orderId) {
         log.info("Getting sagas for order: {}", orderId);
-        
-        // Find sagas by order ID
-        List<SagaInstance> instances = List.of(sagaInstanceRepository.findByOrderId(orderId).orElse(null))
-                .stream().filter(Objects::nonNull).collect(Collectors.toList());
-        
+
+        List<SagaInstance> instances = orchestrationService.findSagasByMetadata("orderId", orderId);
+
         // Map to response format
         List<Map<String, Object>> response = instances.stream()
                 .map(instance -> {
@@ -102,20 +102,17 @@ public class SagaController {
                     sagaInfo.put("status", instance.getStatus());
                     sagaInfo.put("createdAt", instance.getCreatedAt());
                     sagaInfo.put("updatedAt", instance.getUpdatedAt());
-                    
-                    // Get saga context
+
+                    // Get saga context and populate from payload
                     SagaContext context = (SagaContext) orchestrationService.getSagaContext(instance.getId());
-                    if (context != null) {
-                        sagaInfo.put("orderId", context.getOrderId());
-                        sagaInfo.put("paymentId", context.getPaymentId());
-                        sagaInfo.put("inventoryReservationId", context.getInventoryReservationId());
-                        sagaInfo.put("shippingId", context.getShippingId());
+                    if (context != null && context.getPayload() != null) {
+                        sagaInfo.putAll(context.getPayload());
                     }
-                    
+
                     return sagaInfo;
                 })
                 .collect(Collectors.toList());
-        
+
         return ResponseEntity.ok(response);
     }
     
@@ -127,7 +124,7 @@ public class SagaController {
         log.info("Getting all active sagas");
         
         // Get all active sagas
-        List<SagaInstance> instances = sagaInstanceRepository.findByStatus("ACTIVE");
+        List<SagaInstance> instances = sagaInstanceRepository.findByStatus("IN_PROGRESS");
         
         // Map to response format
         List<Map<String, Object>> response = instances.stream()
@@ -139,7 +136,11 @@ public class SagaController {
                     sagaInfo.put("status", instance.getStatus());
                     sagaInfo.put("createdAt", instance.getCreatedAt());
                     sagaInfo.put("updatedAt", instance.getUpdatedAt());
-                    sagaInfo.put("orderId", instance.getOrderId());
+                    
+                    SagaContext context = (SagaContext) orchestrationService.getSagaContext(instance.getId());
+                    if (context != null && context.getPayload() != null) {
+                        sagaInfo.put("orderId", context.getPayload().get("orderId"));
+                    }
                     return sagaInfo;
                 })
                 .collect(Collectors.toList());
@@ -148,20 +149,26 @@ public class SagaController {
     }
 
     private SagaResponse buildSagaResponse(SagaInstance instance, SagaContext context) {
+        Map<String, Object> payload = context.getPayload() != null ? context.getPayload() : new HashMap<>();
+        
+        Object lastShippingUpdate = payload.get("lastShippingUpdate");
+        LocalDateTime lastShippingUpdateTimestamp = null;
+        if (lastShippingUpdate != null) {
+            lastShippingUpdateTimestamp = LocalDateTime.parse(lastShippingUpdate.toString());
+        }
+
         return SagaResponse.builder()
                 .sagaId(instance.getId())
-                .orderId(instance.getOrderId())
+                .orderId(String.valueOf(payload.get("orderId")))
                 .currentState(SagaStates.valueOf(instance.getCurrentState()))
                 .status(instance.getStatus())
                 .errorMessage(instance.getErrorMessage())
-                .startTime(context.getStartTime())
+                .startTime((LocalDateTime) payload.get("startTime"))
                 .lastUpdateTime(instance.getUpdatedAt())
-                .metadata(context.getMetadata())
-                .shippingId(context.getShippingId())
-                .lastShippingStatus((String) context.getMetadata().get("lastShippingStatus"))
-                .lastShippingUpdate(context.getMetadata().get("lastShippingUpdate") != null 
-                        ? LocalDateTime.parse(context.getMetadata().get("lastShippingUpdate").toString())
-                        : null)
+                .metadata(payload)
+                .shippingId((String) payload.get("shippingId"))
+                .lastShippingStatus((String) payload.get("lastShippingStatus"))
+                .lastShippingUpdate(lastShippingUpdateTimestamp)
                 .build();
     }
 } 

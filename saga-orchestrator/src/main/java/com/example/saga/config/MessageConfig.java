@@ -19,6 +19,7 @@ public class MessageConfig {
     public static final String SAGA_REPLY_EXCHANGE = "saga-reply-exchange";
     
     // Queue names
+    public static final String SAGA_START_QUEUE = "saga-start-queue";
     public static final String PAYMENT_COMMAND_QUEUE = "payment-command-queue";
     public static final String PAYMENT_REPLY_QUEUE = "payment-reply-queue";
     public static final String INVENTORY_COMMAND_QUEUE = "inventory-command-queue";
@@ -34,6 +35,7 @@ public class MessageConfig {
     public static final String INVENTORY_RELEASE_KEY = "inventory.release";
     public static final String SHIPPING_SCHEDULE_KEY = "shipping.schedule";
     public static final String SHIPPING_CANCEL_KEY = "shipping.cancel";
+    public static final String SAGA_START_KEY = "saga.start";
     
     // Routing keys for replies
     public static final String PAYMENT_REPLY_KEY = "payment.reply";
@@ -60,6 +62,11 @@ public class MessageConfig {
     @Bean
     public DirectExchange sagaReplyExchange() {
         return new DirectExchange(SAGA_REPLY_EXCHANGE);
+    }
+    
+    @Bean
+    public Queue sagaStartQueue() {
+        return new Queue(SAGA_START_QUEUE);
     }
     
     @Bean
@@ -139,6 +146,13 @@ public class MessageConfig {
         return BindingBuilder.bind(shippingCommandQueue())
                 .to(sagaCommandExchange())
                 .with(SHIPPING_CANCEL_KEY);
+    }
+    
+    @Bean
+    public Binding sagaStartBinding() {
+        return BindingBuilder.bind(sagaStartQueue())
+                .to(sagaCommandExchange())
+                .with(SAGA_START_KEY);
     }
     
     @Bean

@@ -55,10 +55,10 @@ public class SagaOrchestrationService {
             definition.validateContext(context);
             
             // Prepare context
-            if (context instanceof SagaContext) {
-                ((SagaContext) context).setSagaId(sagaId);
-                ((SagaContext) context).setStartTime(LocalDateTime.now());
-                ((SagaContext) context).setStatus("IN_PROGRESS");
+            if (context instanceof SagaContext sagaContext) {
+                sagaContext.setSagaId(sagaId);
+                sagaContext.getPayload().put("startTime", LocalDateTime.now());
+                sagaContext.getPayload().put("status", "IN_PROGRESS");
             }
             
             // Create and start state machine
@@ -249,47 +249,18 @@ public class SagaOrchestrationService {
             return activeSagas.stream()
                     .filter(saga -> {
                         try {
-                            // Parse saga data and check if it contains the metadata
-                            Object context = objectMapper.readValue(saga.getSagaData(), Object.class);
-                            
-                            // Check if context has metadata
-                            if (context instanceof Map) {
-                                Map<String, Object> map = (Map<String, Object>) context;
-                                return value.equals(map.get(key));
-                            } else if (context instanceof SagaContext) {
-                                SagaContext sagaContext = (SagaContext) context;
-                                // Check direct property first
-                                try {
-                                    Field field = SagaContext.class.getDeclaredField(key);
-                                    field.setAccessible(true);
-                                    Object fieldValue = field.get(sagaContext);
-                                    return value.equals(fieldValue);
-                                } catch (NoSuchFieldException e) {
-                                    // Check in metadata map
-                                    return value.equals(sagaContext.getMetadata(key));
-                                }
-                            } else if (context instanceof ShippingContext) {
-                                ShippingContext shippingContext = (ShippingContext) context;
-                                // Check if the key is a property of ShippingContext
-                                try {
-                                    Field field = ShippingContext.class.getDeclaredField(key);
-                                    field.setAccessible(true);
-                                    Object fieldValue = field.get(shippingContext);
-                                    return value.equals(fieldValue);
-                                } catch (NoSuchFieldException e) {
-                                    return false;
-                                }
-                            }
-                            return false;
+                            SagaContext sagaContext = objectMapper.readValue(saga.getSagaData(), SagaContext.class);
+                            Object metadataValue = sagaContext.getPayload().get(key);
+                            return metadataValue != null && metadataValue.toString().equals(value);
                         } catch (Exception e) {
-                            log.error("Error parsing saga data for saga: {}", saga.getId(), e);
+                            log.warn("Could not parse sagaData for sagaId: {}", saga.getId(), e);
                             return false;
                         }
                     })
                     .collect(Collectors.toList());
-                    
+            
         } catch (Exception e) {
-            log.error("Error finding sagas by metadata: {}={}", key, value, e);
+            log.error("Error finding sagas by metadata", e);
             return Collections.emptyList();
         }
     }
