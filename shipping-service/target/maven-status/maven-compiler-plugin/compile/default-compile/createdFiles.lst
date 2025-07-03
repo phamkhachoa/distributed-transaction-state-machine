@@ -1,10 +1,6 @@
-com/example/shippingservice/model/Shipping.class
-com/example/shippingservice/config/RabbitConfig.class
-com/example/shippingservice/model/Shipping$ShippingBuilder.class
-com/example/shippingservice/service/ShippingService.class
-com/example/shippingservice/dto/SagaReply$SagaReplyBuilder.class
-com/example/shippingservice/repository/ShippingRepository.class
-com/example/shippingservice/dto/SagaReply.class
+com/example/shippingservice/entity/Shipping$ShippingBuilder.class
+com/example/shippingservice/listener/ShippingRequestListener.class
 com/example/shippingservice/ShippingServiceApplication.class
-com/example/shippingservice/dto/SagaCommand.class
-com/example/shippingservice/dto/SagaCommand$SagaCommandBuilder.class
+com/example/shippingservice/service/ShippingService.class
+com/example/shippingservice/repository/ShippingRepository.class
+com/example/shippingservice/entity/Shipping.class

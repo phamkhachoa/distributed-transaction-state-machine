@@ -1,8 +1,5 @@
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/listener/ShippingRequestListener.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/config/RabbitConfig.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/repository/ShippingRepository.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/model/Shipping.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/service/ShippingService.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/dto/SagaReply.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/entity/Shipping.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/ShippingServiceApplication.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/shipping-service/src/main/java/com/example/shippingservice/dto/SagaCommand.java

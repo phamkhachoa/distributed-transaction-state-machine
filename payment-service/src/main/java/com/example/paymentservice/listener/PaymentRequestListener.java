@@ -1,84 +1,81 @@
 package com.example.paymentservice.listener;
 
-import com.example.paymentservice.dto.SagaReply;
-import com.example.paymentservice.model.Payment;
+import com.example.common.dto.SagaCommand;
+import com.example.common.dto.SagaReply;
+import com.example.common.outbox.OutboxMessage;
+import com.example.common.outbox.OutboxService;
+import com.example.paymentservice.entity.Payment;
 import com.example.paymentservice.service.PaymentService;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class PaymentRequestListener {
 
     private final PaymentService paymentService;
-    private final RabbitTemplate rabbitTemplate;
+    private final OutboxService outboxService;
     private final ObjectMapper objectMapper;
-    private static final String SAGA_REPLY_QUEUE = "saga-replies";
 
     @RabbitListener(queues = "payment-requests")
-    public void handlePaymentRequest(String message) {
+    public void handleRequest(SagaCommand command) {
+        String action = command.getPayload().get("action").toString();
         SagaReply reply;
-        String sagaId = null;
         try {
-            Map<String, Object> command = objectMapper.readValue(message, new TypeReference<>() {});
-            sagaId = (String) command.get("sagaId");
-            String action = (String) command.get("action");
-            Map<String, Object> payload = (Map<String, Object>) command.get("payload");
-
-            log.info("Received payment request for sagaId: {}, action: {}", sagaId, action);
-
             if ("PROCESS_PAYMENT".equals(action)) {
-                String orderId = (String) payload.get("orderId");
-                BigDecimal amount = new BigDecimal(payload.get("amount").toString());
-                Payment payment = paymentService.processPayment(orderId, amount);
+                Payment payment = paymentService.processPayment(command);
+                Map<String, Object> payload = command.getPayload();
                 payload.put("paymentId", payment.getId());
-
-                reply = SagaReply.builder()
-                        .sagaId(sagaId)
-                        .service("payment")
-                        .status("SUCCESS")
-                        .payload(payload)
-                        .build();
-
-            } else if ("REFUND_PAYMENT".equals(action)) {
-                Long paymentId = Long.parseLong(payload.get("paymentId").toString());
-                paymentService.processRefund(paymentId);
-                reply = SagaReply.builder()
-                        .sagaId(sagaId)
-                        .service("payment")
-                        .status("SUCCESS")
-                        .payload(payload)
-                        .build();
-
+                reply = createSuccessReply(command, payload);
+                saveReplyToOutbox("payment.succeeded", reply);
+            } else if ("COMPENSATE_PAYMENT".equals(action)) {
+                paymentService.processRefund(command);
+                reply = createSuccessReply(command, command.getPayload());
+                saveReplyToOutbox("payment.compensated", reply);
             } else {
                 throw new IllegalArgumentException("Unknown action: " + action);
             }
-
         } catch (Exception e) {
-            log.error("Error processing payment request for sagaId: {}", sagaId, e);
-            reply = SagaReply.builder()
-                    .sagaId(sagaId)
-                    .service("payment")
-                    .status("FAILED")
-                    .failureReason(e.getMessage())
-                    .build();
+            log.error("Failed to process request for sagaId: {}", command.getSagaId(), e);
+            reply = createFailureReply(command, e.getMessage());
+            saveReplyToOutbox("payment.failed", reply);
         }
+    }
 
+    private void saveReplyToOutbox(String routingKey, SagaReply reply) {
         try {
-            String replyMessage = objectMapper.writeValueAsString(reply);
-            rabbitTemplate.convertAndSend(SAGA_REPLY_QUEUE, replyMessage);
-            log.info("Sent payment reply for sagaId: {}", sagaId);
-        } catch (Exception e) {
-            log.error("Error sending reply for sagaId: {}", sagaId, e);
+            OutboxMessage outboxMessage = OutboxMessage.builder()
+                    .exchange("saga-replies")
+                    .routingKey(routingKey)
+                    .payload(objectMapper.writeValueAsString(reply))
+                    .build();
+            outboxService.saveMessage(outboxMessage);
+        } catch (JsonProcessingException e) {
+            log.error("Error serializing saga reply for sagaId: {}", reply.getSagaId(), e);
         }
+    }
+
+    private SagaReply createSuccessReply(SagaCommand command, Map<String, Object> payload) {
+        return SagaReply.builder()
+                .sagaId(command.getSagaId())
+                .success(true)
+                .payload(payload)
+                .build();
+    }
+
+    private SagaReply createFailureReply(SagaCommand command, String reason) {
+        return SagaReply.builder()
+                .sagaId(command.getSagaId())
+                .success(false)
+                .reason(reason)
+                .payload(command.getPayload())
+                .build();
     }
 } 

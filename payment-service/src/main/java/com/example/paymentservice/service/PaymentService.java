@@ -1,13 +1,14 @@
 package com.example.paymentservice.service;
 
-import com.example.paymentservice.model.Payment;
+import com.example.common.dto.SagaCommand;
+import com.example.paymentservice.entity.Payment;
 import com.example.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -15,31 +16,31 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    public Payment processPayment(String orderId, BigDecimal amount) {
-        // Simulate payment processing
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be positive");
+    @Transactional
+    public Payment processPayment(SagaCommand command) {
+        Map<String, Object> payload = command.getPayload();
+        Integer orderId = (Integer) payload.get("id");
+        BigDecimal price = new BigDecimal(payload.get("price").toString());
+
+        if (price.compareTo(new BigDecimal("1000")) > 0) {
+            throw new RuntimeException("Payment amount exceeds limit for order " + orderId);
         }
 
         Payment payment = Payment.builder()
                 .orderId(orderId)
-                .amount(amount)
+                .amount(price)
                 .status("COMPLETED")
-                .timestamp(LocalDateTime.now())
                 .build();
-        
         return paymentRepository.save(payment);
     }
 
-    public void processRefund(Long paymentId) {
+    @Transactional
+    public void processRefund(SagaCommand command) {
+        Map<String, Object> payload = command.getPayload();
+        Integer paymentId = (Integer) payload.get("paymentId");
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
-
-        if (!"COMPLETED".equals(payment.getStatus())) {
-            throw new IllegalStateException("Cannot refund a payment that is not completed");
-        }
-
+                .orElseThrow(() -> new RuntimeException("Payment not found for id: " + paymentId));
         payment.setStatus("REFUNDED");
         paymentRepository.save(payment);
     }
-} 
+}

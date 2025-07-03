@@ -1,9 +1,5 @@
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/repository/PaymentRepository.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/model/Payment.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/config/RabbitConfig.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/dto/PaymentSucceededEvent.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/entity/Payment.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/PaymentServiceApplication.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/dto/SagaReply.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/service/PaymentService.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/dto/SagaCommand.java
 /Users/hoapham/prjs/github/distributed-transaction-state-machine/payment-service/src/main/java/com/example/paymentservice/listener/PaymentRequestListener.java

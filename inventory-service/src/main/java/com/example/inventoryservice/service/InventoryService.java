@@ -1,54 +1,47 @@
 package com.example.inventoryservice.service;
 
-import com.example.inventoryservice.model.Inventory;
-import com.example.inventoryservice.model.OrderItem;
+import com.example.common.dto.SagaCommand;
+import com.example.inventoryservice.entity.Inventory;
 import com.example.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
-    private final ConcurrentHashMap<String, List<OrderItem>> reservations = new ConcurrentHashMap<>();
 
     @Transactional
-    public String reserveInventory(List<OrderItem> items) {
-        for (OrderItem item : items) {
-            Inventory inventoryItem = inventoryRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found: " + item.getProductId()));
+    public void deductInventory(SagaCommand command) {
+        Map<String, Object> payload = command.getPayload();
+        Integer productId = (Integer) payload.get("productId");
+        Inventory inventory = inventoryRepository.findByProductId(productId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found for product: " + productId));
 
-            if (inventoryItem.getQuantity() < item.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for product: " + item.getProductId());
-            }
-
-            inventoryItem.setQuantity(inventoryItem.getQuantity() - item.getQuantity());
-            inventoryRepository.save(inventoryItem);
+        if (inventory.getQuantity() <= 0) {
+            throw new RuntimeException("Insufficient inventory for product: " + productId);
         }
 
-        String reservationId = UUID.randomUUID().toString();
-        reservations.put(reservationId, items);
-        return reservationId;
+        inventory.setQuantity(inventory.getQuantity() - 1);
+        inventoryRepository.save(inventory);
+        log.info("Inventory deducted for product: {}", productId);
     }
 
     @Transactional
-    public void releaseInventory(String reservationId) {
-        List<OrderItem> itemsToRelease = reservations.remove(reservationId);
-        if (itemsToRelease == null) {
-            return; // Or throw an exception if reservation not found
-        }
+    public void addInventory(SagaCommand command) {
+        Map<String, Object> payload = command.getPayload();
+        Integer productId = (Integer) payload.get("productId");
+        Inventory inventory = inventoryRepository.findByProductId(productId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found for product: " + productId));
 
-        for (OrderItem item : itemsToRelease) {
-            Inventory inventoryItem = inventoryRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found: " + item.getProductId()));
-            inventoryItem.setQuantity(inventoryItem.getQuantity() + item.getQuantity());
-            inventoryRepository.save(inventoryItem);
-        }
+        inventory.setQuantity(inventory.getQuantity() + 1);
+        inventoryRepository.save(inventory);
+        log.info("Inventory compensated for product: {}", productId);
     }
 } 
