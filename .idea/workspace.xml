@@ -5,173 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c398e05c-82c1-4aca-a85a-69996977cfa1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/MessageRelay.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/OutboxAutoConfiguration.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/OutboxMessage$OutboxMessageBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/OutboxMessage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/OutboxMessageRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/OutboxMessageStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/classes/com/example/common/outbox/OutboxService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/common-outbox-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-outbox/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/classes/com/example/notificationservice/NotificationServiceApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/classes/com/example/notificationservice/dto/PaymentSucceededEvent$PaymentSucceededEventBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/classes/com/example/notificationservice/dto/PaymentSucceededEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/classes/com/example/notificationservice/listener/EmailNotificationListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/target/notification-service-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/order/outbox/OutboxMessage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/order/outbox/OutboxMessageRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/order/outbox/OutboxMessageStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/AppConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/config/RabbitConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/controller/OrderController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/SagaCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/SagaCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/dto/SagaReply.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/listener/SagaReplyListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/model/Order.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/model/OrderItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/orchestrator/SagaOrchestrator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/repository/OrderRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/example/orderservice/service/OrderService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/sagas/order_processing_saga.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/sagas/ordering/order_cancellation_saga.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/order/outbox/OutboxMessage$OutboxMessageBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/order/outbox/OutboxMessage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/order/outbox/OutboxMessageStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/OrderServiceApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/config/AppConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/config/RabbitConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/controller/OrderController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/dto/SagaCommand$SagaCommandBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/dto/SagaCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/dto/SagaReply$SagaReplyBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/dto/SagaReply.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/listener/SagaReplyListener$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/listener/SagaReplyListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/model/Order.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/model/OrderItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/orchestrator/SagaOrchestrator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/repository/OrderRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/service/OrderService$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/com/example/orderservice/service/OrderService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/sagas/order_processing_saga.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/classes/sagas/ordering/order_cancellation_saga.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/target/order-service-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/listener/PaymentRequestListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/listener/PaymentRequestListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/service/PaymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/PaymentServiceApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/config/RabbitConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/dto/PaymentSucceededEvent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/dto/SagaCommand$SagaCommandBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/dto/SagaCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/dto/SagaReply$SagaReplyBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/dto/SagaReply.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/listener/PaymentRequestListener$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/listener/PaymentRequestListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/model/Payment$PaymentBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/model/Payment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/repository/PaymentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/classes/com/example/paymentservice/service/PaymentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/target/payment-service-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/SagaOrchestratorApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/InventoryAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/PaymentAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/ShippingAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/MessageConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/RedissonConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/StateMachineConfig$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/StateMachineConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/LockManagementController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/SagaController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/SagaHistoryController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/OrderSagaDefinition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/SagaDefinition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/SagaResponse$SagaResponseBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/SagaResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/StartSagaRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaCommandListener$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaCommandListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaReplyListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaStateChangeListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/ShippingSagaListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/DistributedLock.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/DistributedLockImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/RedissonDistributedLock.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaContext$SagaContextBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaEvents.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaStates.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingContextBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingStatusUpdate$ShippingStatusUpdateBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingStatusUpdate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingEvents.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingStates.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/MessageRelay.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessage$OutboxMessageBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessageRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessageStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaCheckpoint$SagaCheckpointBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaCheckpoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistory$SagaHistoryBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistoryRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstance$SagaInstanceBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstance.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstanceRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/registry/SagaRegistry.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/retry/RetryableAction$RetryableActionBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/retry/RetryableAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/SagaOrchestrationService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/SagaRecoveryService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/ShippingSagaService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/saga-orchestrator-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shipping-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/src/main/java/com/example/shippingservice/listener/ShippingRequestListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/shipping-service/src/main/java/com/example/shippingservice/listener/ShippingRequestListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/src/main/java/com/example/shippingservice/service/ShippingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/shipping-service/src/main/java/com/example/shippingservice/service/ShippingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/ShippingServiceApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/config/RabbitConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/dto/SagaCommand$SagaCommandBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/dto/SagaCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/dto/SagaReply$SagaReplyBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/dto/SagaReply.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/model/Shipping$ShippingBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/model/Shipping.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/repository/ShippingRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/classes/com/example/shippingservice/service/ShippingService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/target/shipping-service-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cursor_fixing_saga_event_trigger_error.md" beforeDir="false" afterPath="$PROJECT_DIR$/cursor_fixing_saga_event_trigger_error.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,6 +41,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.InventoryServiceApplication.executor": "Debug",
     "Spring Boot.OrderServiceApplication.executor": "Debug",
     "Spring Boot.PaymentServiceApplication.executor": "Run",
@@ -326,6 +165,7 @@
       <workItem from="1751525189815" duration="9729000" />
       <workItem from="1751556622470" duration="4656000" />
       <workItem from="1751565159290" duration="61000" />
+      <workItem from="1751565233440" duration="705000" />
     </task>
     <servers />
   </component>

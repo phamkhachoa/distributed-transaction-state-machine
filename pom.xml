@@ -20,12 +20,13 @@
 
     <modules>
         <module>common</module>
-        <module>saga-orchestrator</module>
         <module>order-service</module>
-        <module>payment-service</module>
         <module>inventory-service</module>
+        <module>payment-service</module>
         <module>shipping-service</module>
         <module>notification-service</module>
+        <module>saga-orchestrator</module>
+        <module>integration-tests</module>
     </modules>
 
     <dependencyManagement>
