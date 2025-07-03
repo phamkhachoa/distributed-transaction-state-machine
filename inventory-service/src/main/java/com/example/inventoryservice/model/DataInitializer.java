@@ -13,8 +13,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        inventoryRepository.save(Inventory.builder().productId("product-1").quantity(100).build());
-        inventoryRepository.save(Inventory.builder().productId("product-2").quantity(100).build());
-        inventoryRepository.save(Inventory.builder().productId("product-3").quantity(0).build()); // Product out of stock
+        inventoryRepository.save(Inventory.builder().productId("1").quantity(100).build());
+        inventoryRepository.save(Inventory.builder().productId("2").quantity(100).build());
+        inventoryRepository.save(Inventory.builder().productId("3").quantity(100).build());
     }
 } 

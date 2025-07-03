@@ -1,49 +1,36 @@
 package com.example.orderservice.controller;
 
 import com.example.orderservice.model.Order;
+import com.example.orderservice.repository.OrderRepository;
 import com.example.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
-        return ResponseEntity.accepted().body(createdOrder);
+        return ResponseEntity.ok(orderService.createOrder(order));
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable String orderId) {
-        return orderService.getOrder(orderId)
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+        return orderRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<Void> cancelOrder(@PathVariable String orderId) {
-        Optional<Order> orderOpt = orderService.getOrder(orderId);
-        if (orderOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        orderService.cancelOrder(orderOpt.get());
-        return ResponseEntity.accepted().build();
-    }
-    
-    @GetMapping("/{orderId}/check-cancellable")
-    public ResponseEntity<Void> checkCancellable(@PathVariable String orderId) {
-        if (orderService.isCancellable(orderId)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(409).build(); // 409 Conflict
+    @GetMapping
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 } 

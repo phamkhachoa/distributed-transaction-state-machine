@@ -1,0 +1,17 @@
+com/example/inventoryservice/dto/SagaReply.class
+com/example/inventoryservice/listener/InventoryRequestListener$2.class
+com/example/inventoryservice/model/Inventory.class
+com/example/inventoryservice/model/DataInitializer.class
+com/example/inventoryservice/service/InventoryService.class
+com/example/inventoryservice/dto/SagaCommand$SagaCommandBuilder.class
+com/example/inventoryservice/model/OrderItem$OrderItemBuilder.class
+com/example/inventoryservice/dto/SagaCommand.class
+com/example/inventoryservice/InventoryServiceApplication.class
+com/example/inventoryservice/config/RabbitConfig.class
+com/example/inventoryservice/controller/InventoryController.class
+com/example/inventoryservice/repository/InventoryRepository.class
+com/example/inventoryservice/model/OrderItem.class
+com/example/inventoryservice/dto/SagaReply$SagaReplyBuilder.class
+com/example/inventoryservice/listener/InventoryRequestListener$1.class
+com/example/inventoryservice/listener/InventoryRequestListener.class
+com/example/inventoryservice/model/Inventory$InventoryBuilder.class

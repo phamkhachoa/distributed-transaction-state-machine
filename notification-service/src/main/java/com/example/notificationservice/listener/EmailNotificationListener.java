@@ -1,12 +1,14 @@
 package com.example.notificationservice.listener;
 
 import com.example.notificationservice.dto.PaymentSucceededEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class EmailNotificationListener {
 
     public static final String PAYMENT_SUCCESS_TOPIC = "payment.success.events";

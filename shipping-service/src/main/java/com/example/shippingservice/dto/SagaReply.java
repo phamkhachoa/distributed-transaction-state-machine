@@ -14,8 +14,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class SagaReply implements Serializable {
     private String sagaId;
-    private String stateId;
-    private boolean success;
-    private Map<String, Object> output;
+    private String service;
+    private String status;
     private String failureReason;
+    private Map<String, Object> payload;
 } 

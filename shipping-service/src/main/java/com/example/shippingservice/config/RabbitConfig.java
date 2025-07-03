@@ -22,6 +22,11 @@ public class RabbitConfig {
     public static final String SHIPPING_CANCEL_ROUTING_KEY = "shipping.cancel";
 
     @Bean
+    public Queue shippingRequestsQueue() {
+        return new Queue("shipping-requests", false);
+    }
+
+    @Bean
     public Queue shippingCommandQueue() {
         return new Queue(SHIPPING_COMMAND_QUEUE, true);
     }

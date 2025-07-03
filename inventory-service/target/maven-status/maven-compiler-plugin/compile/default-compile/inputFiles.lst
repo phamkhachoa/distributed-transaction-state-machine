@@ -1,0 +1,11 @@
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/service/InventoryService.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/model/DataInitializer.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/model/Inventory.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/dto/SagaReply.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/InventoryServiceApplication.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/repository/InventoryRepository.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/listener/InventoryRequestListener.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/controller/InventoryController.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/dto/SagaCommand.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/config/RabbitConfig.java
+/Users/hoapham/prjs/github/distributed-transaction-state-machine/inventory-service/src/main/java/com/example/inventoryservice/model/OrderItem.java

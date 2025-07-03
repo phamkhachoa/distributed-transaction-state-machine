@@ -93,4 +93,9 @@ public class RabbitConfig {
         template.setMessageConverter(jsonMessageConverter());
         return template;
     }
+
+    @Bean
+    public Queue paymentRequestsQueue() {
+        return new Queue("payment-requests", false);
+    }
 } 

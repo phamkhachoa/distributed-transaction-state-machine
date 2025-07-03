@@ -4,10 +4,10 @@ import com.example.paymentservice.model.Payment;
 import com.example.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,33 +15,31 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    @Transactional
     public Payment processPayment(String orderId, BigDecimal amount) {
-        // Simulate payment failure for amounts less than 10 for testing purposes
-        if (amount.compareTo(BigDecimal.TEN) < 0) {
-            Payment payment = Payment.builder()
-                    .orderId(orderId)
-                    .amount(amount)
-                    .status("FAILED")
-                    .build();
-            paymentRepository.save(payment);
-            throw new RuntimeException("Payment failed due to insufficient amount.");
+        // Simulate payment processing
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
         }
 
         Payment payment = Payment.builder()
                 .orderId(orderId)
                 .amount(amount)
                 .status("COMPLETED")
+                .timestamp(LocalDateTime.now())
                 .build();
+        
         return paymentRepository.save(payment);
     }
 
-    @Transactional
-    public Optional<Payment> refundPayment(String orderId) {
-        return paymentRepository.findByOrderId(orderId)
-                .map(payment -> {
-                    payment.setStatus("REFUNDED");
-                    return paymentRepository.save(payment);
-                });
+    public void processRefund(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        if (!"COMPLETED".equals(payment.getStatus())) {
+            throw new IllegalStateException("Cannot refund a payment that is not completed");
+        }
+
+        payment.setStatus("REFUNDED");
+        paymentRepository.save(payment);
     }
 } 

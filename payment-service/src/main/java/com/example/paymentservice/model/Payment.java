@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(unique = true)
@@ -26,4 +27,6 @@ public class Payment {
     private BigDecimal amount;
     
     private String status; // e.g., "COMPLETED", "FAILED", "REFUNDED"
+
+    private LocalDateTime timestamp;
 } 

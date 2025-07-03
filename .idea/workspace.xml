@@ -4,11 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c398e05c-82c1-4aca-a85a-69996977cfa1" name="Changes" comment="" />
+    <list default="true" id="c398e05c-82c1-4aca-a85a-69996977cfa1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/listener/SagaReplyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/listener/SagaReplyListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/service/SagaRecoveryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/service/SagaRecoveryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -36,6 +43,7 @@
     "Spring Boot.PaymentServiceApplication.executor": "Debug",
     "Spring Boot.ShippingServiceApplication.executor": "Debug",
     "Spring Boot.WorkflowServiceApplication.executor": "Debug",
+    "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/hoapham/prjs/github/distributed-transaction-state-machine",
@@ -150,7 +158,7 @@
       <updated>1751470912495</updated>
       <workItem from="1751470913579" duration="4925000" />
       <workItem from="1751511784081" duration="3363000" />
-      <workItem from="1751525189815" duration="9367000" />
+      <workItem from="1751525189815" duration="9729000" />
     </task>
     <servers />
   </component>

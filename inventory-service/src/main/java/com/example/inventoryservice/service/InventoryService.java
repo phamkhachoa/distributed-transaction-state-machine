@@ -3,48 +3,52 @@ package com.example.inventoryservice.service;
 import com.example.inventoryservice.model.Inventory;
 import com.example.inventoryservice.model.OrderItem;
 import com.example.inventoryservice.repository.InventoryRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ConcurrentHashMap<String, List<OrderItem>> reservations = new ConcurrentHashMap<>();
 
     @Transactional
-    public void reserveInventory(String orderId, String itemsJson) throws IOException {
-        List<OrderItem> items = objectMapper.readValue(itemsJson, new TypeReference<>() {});
-
+    public String reserveInventory(List<OrderItem> items) {
         for (OrderItem item : items) {
             Inventory inventoryItem = inventoryRepository.findById(item.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found: " + item.getProductId()));
-            
+
             if (inventoryItem.getQuantity() < item.getQuantity()) {
                 throw new RuntimeException("Insufficient stock for product: " + item.getProductId());
             }
-            
+
             inventoryItem.setQuantity(inventoryItem.getQuantity() - item.getQuantity());
             inventoryRepository.save(inventoryItem);
         }
+
+        String reservationId = UUID.randomUUID().toString();
+        reservations.put(reservationId, items);
+        return reservationId;
     }
 
     @Transactional
-    public void releaseInventory(String orderId, String itemsJson) throws IOException {
-        List<OrderItem> items = objectMapper.readValue(itemsJson, new TypeReference<>() {});
+    public void releaseInventory(String reservationId) {
+        List<OrderItem> itemsToRelease = reservations.remove(reservationId);
+        if (itemsToRelease == null) {
+            return; // Or throw an exception if reservation not found
+        }
 
-        for (OrderItem item : items) {
-            inventoryRepository.findById(item.getProductId()).ifPresent(inventoryItem -> {
-                inventoryItem.setQuantity(inventoryItem.getQuantity() + item.getQuantity());
-                inventoryRepository.save(inventoryItem);
-            });
+        for (OrderItem item : itemsToRelease) {
+            Inventory inventoryItem = inventoryRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found: " + item.getProductId()));
+            inventoryItem.setQuantity(inventoryItem.getQuantity() + item.getQuantity());
+            inventoryRepository.save(inventoryItem);
         }
     }
 } 
