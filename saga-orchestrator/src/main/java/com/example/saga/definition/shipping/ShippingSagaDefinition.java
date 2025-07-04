@@ -1,4 +1,4 @@
-package com.example.saga.definition;
+package com.example.saga.definition.shipping;
 
 import com.example.saga.action.ShippingAction;
 import com.example.saga.model.ShippingEvents;

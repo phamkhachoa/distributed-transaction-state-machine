@@ -6,6 +6,8 @@ import org.springframework.statemachine.config.StateMachineFactory;
  * Base interface for all saga definitions
  */
 public interface SagaDefinition<S extends Enum<S>, E extends Enum<E>> {
+
+    public static final String TARGET_ID_HEADER = "TARGET_ID_HEADER";
     
     /**
      * Get the state machine factory for this saga type

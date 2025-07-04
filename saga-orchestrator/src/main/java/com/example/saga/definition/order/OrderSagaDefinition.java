@@ -1,5 +1,6 @@
-package com.example.saga.definition;
+package com.example.saga.definition.order;
 
+import com.example.saga.definition.SagaDefinition;
 import com.example.saga.model.SagaContext;
 import com.example.saga.model.SagaEvents;
 import com.example.saga.model.SagaStates;
@@ -12,7 +13,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.config.configurers.StateConfigurer;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
