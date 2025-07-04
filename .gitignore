@@ -1,0 +1,6 @@
+/.idea/
+/logs/
+*.iml
+/vinhome-sap/target/
+/*/target/*
+/target/

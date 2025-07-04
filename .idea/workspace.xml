@@ -5,11 +5,76 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c398e05c-82c1-4aca-a85a-69996977cfa1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cursor_fixing_saga_event_trigger_error.md" beforeDir="false" afterPath="$PROJECT_DIR$/cursor_fixing_saga_event_trigger_error.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaCommand$SagaCommandBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaCommand$SagaCommandBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaReply$SagaReplyBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaReply$SagaReplyBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaReply.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/dto/SagaReply.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/MessageRelay.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/MessageRelay.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxAutoConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxAutoConfiguration.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessage$OutboxMessageBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessage$OutboxMessageBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessageRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessageRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessageStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxMessageStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxService.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/com/example/common/outbox/OutboxService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/integration-tests/target/test-classes/com/example/sagatest/OrderSagaIntegrationTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/integration-tests/target/test-classes/com/example/sagatest/OrderSagaIntegrationTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/SagaOrchestratorApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/SagaOrchestratorApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/InventoryAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/InventoryAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/PaymentAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/PaymentAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/ShippingAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/action/ShippingAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/MessageConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/MessageConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/RedissonConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/RedissonConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/StateMachineConfig$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/StateMachineConfig$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/StateMachineConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/config/StateMachineConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/LockManagementController.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/LockManagementController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/SagaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/SagaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/SagaHistoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/controller/SagaHistoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/OrderSagaDefinition.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/OrderSagaDefinition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/SagaDefinition.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/SagaDefinition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/definition/ShippingSagaDefinition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/SagaResponse$SagaResponseBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/SagaResponse$SagaResponseBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/SagaResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/SagaResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/StartSagaRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/dto/StartSagaRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaCommandListener$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaCommandListener$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaCommandListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaCommandListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaReplyListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaReplyListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaStateChangeListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/SagaStateChangeListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/ShippingSagaListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/listener/ShippingSagaListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/DistributedLockImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/DistributedLockImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/RedissonDistributedLock.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/lock/RedissonDistributedLock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaContext$SagaContextBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaContext$SagaContextBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaContext.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaEvents.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaEvents.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaStates.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/SagaStates.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingContextBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingContextBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingStatusUpdate$ShippingStatusUpdateBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingStatusUpdate$ShippingStatusUpdateBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingStatusUpdate.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext$ShippingStatusUpdate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingContext.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingEvents.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingEvents.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingStates.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/model/ShippingStates.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/MessageRelay.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/MessageRelay.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessage$OutboxMessageBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessage$OutboxMessageBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessageRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessageRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessageStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxMessageStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxService.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/outbox/OutboxService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaCheckpoint$SagaCheckpointBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaCheckpoint$SagaCheckpointBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaCheckpoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaCheckpoint.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistory$SagaHistoryBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistory$SagaHistoryBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistoryRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaHistoryRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstance$SagaInstanceBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstance$SagaInstanceBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstance.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstance.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstanceRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/persistence/SagaInstanceRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/registry/SagaRegistry.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/registry/SagaRegistry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/retry/RetryableAction$RetryableActionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/retry/RetryableAction$RetryableActionBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/retry/RetryableAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/retry/RetryableAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/SagaOrchestrationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/SagaOrchestrationService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/SagaRecoveryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/SagaRecoveryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/ShippingSagaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/target/classes/com/example/saga/service/ShippingSagaService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,38 +96,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.InventoryServiceApplication.executor": "Debug",
-    "Spring Boot.OrderServiceApplication.executor": "Debug",
-    "Spring Boot.PaymentServiceApplication.executor": "Run",
-    "Spring Boot.ShippingServiceApplication.executor": "Debug",
-    "Spring Boot.WorkflowServiceApplication.executor": "Debug",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/hoapham/prjs/github/distributed-transaction-state-machine",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "run.configurations.included.in.services": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.InventoryServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.PaymentServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ShippingServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.WorkflowServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hoapham/prjs/github/distributed-transaction-state-machine&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="configurationTypes">
       <set>
@@ -166,6 +236,7 @@
       <workItem from="1751556622470" duration="4656000" />
       <workItem from="1751565159290" duration="61000" />
       <workItem from="1751565233440" duration="705000" />
+      <workItem from="1751602234181" duration="66000" />
     </task>
     <servers />
   </component>
