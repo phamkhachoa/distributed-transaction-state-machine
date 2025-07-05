@@ -1,6 +1,0 @@
-com/example/inventoryservice/entity/Inventory.class
-com/example/inventoryservice/InventoryServiceApplication.class
-com/example/inventoryservice/repository/InventoryRepository.class
-com/example/inventoryservice/listener/InventoryRequestListener.class
-com/example/inventoryservice/entity/Inventory$InventoryBuilder.class
-com/example/inventoryservice/service/InventoryService.class

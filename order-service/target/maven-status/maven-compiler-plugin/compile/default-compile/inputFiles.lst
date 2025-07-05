@@ -1,6 +1,0 @@
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/order-service/src/main/java/com/example/orderservice/entity/Order.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/order-service/src/main/java/com/example/orderservice/controller/OrderController.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/order-service/src/main/java/com/example/orderservice/repository/OrderRepository.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/order-service/src/main/java/com/example/orderservice/dto/OrderRequest.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/order-service/src/main/java/com/example/orderservice/service/OrderService.java
-/Users/hoapham/prjs/github/distributed-transaction-state-machine/order-service/src/main/java/com/example/orderservice/OrderServiceApplication.java

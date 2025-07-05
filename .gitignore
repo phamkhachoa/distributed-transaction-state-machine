@@ -1,6 +1,14 @@
 /.idea/
 /logs/
 *.iml
-/vinhome-sap/target/
+/common/target/*
+/integration-tests/target/*
+/inventory-service/target/*
+/notification-service/target/*
+/order-service/target/*
+/payment-service/target/*
+/saga-orchestrator/target/*
+/shipping-service/target/*
 /*/target/*
 /target/
+*.class
