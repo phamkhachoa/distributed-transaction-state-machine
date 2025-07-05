@@ -106,43 +106,20 @@ public class SagaInstance {
         updatedAt = LocalDateTime.now();
     }
     
+    /**
+     * Add checkpoint to saga instance
+     */
     public void addCheckpoint(String state, String event, String actionResult) {
-        SagaCheckpoint checkpoint = SagaCheckpoint.builder()
-                .state(state)
-                .event(event)
-                .actionResult(actionResult)
-                .timestamp(LocalDateTime.now())
-                .build();
+        SagaCheckpoint checkpoint = new SagaCheckpoint();
+        checkpoint.setState(state);
+        checkpoint.setEvent(event);
+        checkpoint.setActionResult(actionResult);
+        checkpoint.setTimestamp(LocalDateTime.now());
         
         if (checkpoints == null) {
             checkpoints = new ArrayList<>();
         }
         checkpoints.add(checkpoint);
-    }
-    
-    public void incrementRetryCount() {
-        if (lastRetryCount == null) {
-            lastRetryCount = 0;
-        }
-        lastRetryCount++;
-    }
-    
-    public void updateNextRetryTime(long delayInSeconds) {
-        nextRetryTime = LocalDateTime.now().plusSeconds(delayInSeconds);
-    }
-    
-    public boolean canRetry(int maxRetries) {
-        return lastRetryCount < maxRetries;
-    }
-    
-    public boolean isRetryDue() {
-        return nextRetryTime == null || LocalDateTime.now().isAfter(nextRetryTime);
-    }
-    
-    public void startCompensation(String fromState) {
-        this.compensationTriggered = true;
-        this.compensationState = fromState;
-        this.status = "COMPENSATING";
     }
     
     /**
@@ -163,6 +140,46 @@ public class SagaInstance {
             return null;
         }
         return metadata.get(key);
+    }
+    
+    /**
+     * Increment retry count
+     */
+    public void incrementRetryCount() {
+        if (lastRetryCount == null) {
+            lastRetryCount = 0;
+        }
+        lastRetryCount++;
+    }
+    
+    /**
+     * Update next retry time
+     */
+    public void updateNextRetryTime(long delayInSeconds) {
+        nextRetryTime = LocalDateTime.now().plusSeconds(delayInSeconds);
+    }
+    
+    /**
+     * Check if saga can be retried
+     */
+    public boolean canRetry(int maxRetries) {
+        return lastRetryCount == null || lastRetryCount < maxRetries;
+    }
+    
+    /**
+     * Check if retry is due
+     */
+    public boolean isRetryDue() {
+        return nextRetryTime == null || LocalDateTime.now().isAfter(nextRetryTime);
+    }
+    
+    /**
+     * Start compensation process
+     */
+    public void startCompensation(String fromState) {
+        this.compensationTriggered = true;
+        this.compensationState = fromState;
+        this.status = "COMPENSATING";
     }
     
     /**

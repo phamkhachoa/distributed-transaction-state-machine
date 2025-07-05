@@ -238,6 +238,47 @@ public class SagaOrchestrationService {
     }
     
     /**
+     * Reconstruct state machine from persisted state
+     */
+    @Transactional
+    public <S extends Enum<S>, E extends Enum<E>> void reconstructStateMachine(String sagaId, String state) {
+        try {
+            SagaInstance sagaInstance = sagaInstanceRepository.findById(sagaId)
+                    .orElseThrow(() -> new RuntimeException("Saga not found: " + sagaId));
+            
+            SagaDefinition<S, E> definition = (SagaDefinition<S, E>) sagaRegistry
+                    .getSagaDefinition(sagaInstance.getSagaType());
+            
+            StateMachine<S, E> stateMachine = definition.getStateMachineFactory()
+                    .getStateMachine(sagaId);
+            
+            @SuppressWarnings("unchecked")
+            S enumState = (S) Enum.valueOf(
+                    (Class<S>) definition.getInitialState().getClass(),
+                    state
+            );
+            
+            // Restore context
+            Object context = objectMapper.readValue(sagaInstance.getSagaData(), Object.class);
+            stateMachine.getExtendedState().getVariables().put(SAGA_CONTEXT_KEY, context);
+            
+            // Reset state machine
+            stateMachine.stop();
+            stateMachine.getStateMachineAccessor()
+                    .doWithAllRegions(access -> {
+                        access.resetStateMachine(new DefaultStateMachineContext<>(
+                                enumState, null, null, null));
+                    });
+            
+            log.info("Reconstructed state machine {} to state: {}", sagaId, state);
+            
+        } catch (Exception e) {
+            log.error("Error reconstructing state machine", e);
+            throw new RuntimeException("Failed to reconstruct state machine", e);
+        }
+    }
+    
+    /**
      * Find saga instances by metadata
      */
     public List<SagaInstance> findSagasByMetadata(String key, String value) {

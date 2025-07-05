@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,6 +19,114 @@ import java.util.Map;
 @AllArgsConstructor
 public class SagaContext implements Serializable {
     private String sagaId;
-    private Map<String, Object> payload;
+    private String orderId;
+    private String userId;
+    private Double amount;
+    private Map<String, Integer> products;
+    
+    // ID tham chiếu đến các service bên ngoài
+    private String paymentId;
+    private String reservationId;
+    private String shippingId;
+    
+    // Metadata
+    private LocalDateTime startTime;
+    private String status;
     private String lastError;
+    
+    @Builder.Default
+    private Map<String, Object> payload = new HashMap<>();
+    
+    /**
+     * Lấy ID tham chiếu đến payment service
+     */
+    public String getPaymentId() {
+        return paymentId;
+    }
+    
+    /**
+     * Đặt ID tham chiếu đến payment service
+     */
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+        if (payload == null) {
+            payload = new HashMap<>();
+        }
+        payload.put("paymentId", paymentId);
+    }
+    
+    /**
+     * Lấy ID tham chiếu đến inventory service
+     */
+    public String getReservationId() {
+        return reservationId;
+    }
+    
+    /**
+     * Đặt ID tham chiếu đến inventory service
+     */
+    public void setReservationId(String reservationId) {
+        this.reservationId = reservationId;
+        if (payload == null) {
+            payload = new HashMap<>();
+        }
+        payload.put("reservationId", reservationId);
+    }
+    
+    /**
+     * Lấy ID tham chiếu đến shipping service
+     */
+    public String getShippingId() {
+        return shippingId;
+    }
+    
+    /**
+     * Đặt ID tham chiếu đến shipping service
+     */
+    public void setShippingId(String shippingId) {
+        this.shippingId = shippingId;
+        if (payload == null) {
+            payload = new HashMap<>();
+        }
+        payload.put("shippingId", shippingId);
+    }
+    
+    /**
+     * Đặt thời gian bắt đầu
+     */
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+        if (payload == null) {
+            payload = new HashMap<>();
+        }
+        payload.put("startTime", startTime);
+    }
+    
+    /**
+     * Lấy ID của saga
+     */
+    public String getSagaId() {
+        return sagaId;
+    }
+    
+    /**
+     * Đặt ID của saga
+     */
+    public void setSagaId(String sagaId) {
+        this.sagaId = sagaId;
+        if (payload == null) {
+            payload = new HashMap<>();
+        }
+        payload.put("sagaId", sagaId);
+    }
+    
+    /**
+     * Lấy payload
+     */
+    public Map<String, Object> getPayload() {
+        if (payload == null) {
+            payload = new HashMap<>();
+        }
+        return payload;
+    }
 } 

@@ -37,7 +37,7 @@ public class RetryableAction<T> {
     private SagaInstance sagaInstance;
     
     public T execute() throws Exception {
-        int attempts = sagaInstance != null ? sagaInstance.getLastRetryCount() : 0;
+        int attempts = sagaInstance != null ? (sagaInstance.getLastRetryCount() != null ? sagaInstance.getLastRetryCount() : 0) : 0;
         Exception lastException = null;
         
         while (attempts < maxRetries) {
