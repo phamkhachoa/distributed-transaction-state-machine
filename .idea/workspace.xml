@@ -6,13 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="c398e05c-82c1-4aca-a85a-69996977cfa1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/definition/order/OrderSagaDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/definition/order/OrderSagaDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/interceptor/SagaPersistenceInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/interceptor/SagaPersistenceInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/dto/SagaCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/dto/SagaCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/dto/SagaReply.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/dto/SagaReply.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/MessageRelay.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/MessageRelay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxMessageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxMessageStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxMessageStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxService.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/example/common/outbox/OutboxService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/entity/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/entity/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/listener/PaymentRequestListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/listener/PaymentRequestListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/repository/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/repository/PaymentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/com/example/paymentservice/service/PaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/action/PaymentAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/action/PaymentAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/listener/SagaReplyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/listener/SagaReplyListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/model/SagaContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/model/SagaContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/model/ShippingContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/model/ShippingContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/persistence/SagaInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/persistence/SagaInstance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/retry/RetryableAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/retry/RetryableAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/service/SagaOrchestrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/service/SagaOrchestrationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/outbox/OutboxMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/saga-orchestrator/src/main/java/com/example/saga/outbox/OutboxMessage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +186,7 @@
       <workItem from="1751556622470" duration="4656000" />
       <workItem from="1751565159290" duration="61000" />
       <workItem from="1751565233440" duration="705000" />
-      <workItem from="1751602234181" duration="9121000" />
+      <workItem from="1751602234181" duration="10520000" />
     </task>
     <servers />
   </component>

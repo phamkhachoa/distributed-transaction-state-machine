@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Context object that holds all data related to a saga execution
+ * Context for saga execution
  */
 @Data
 @Builder
@@ -24,18 +24,28 @@ public class SagaContext implements Serializable {
     private Double amount;
     private Map<String, Integer> products;
     
+    // Payload chứa dữ liệu chung
+    @Builder.Default
+    private Map<String, Object> payload = new HashMap<>();
+    
     // ID tham chiếu đến các service bên ngoài
-    private String paymentId;
-    private String reservationId;
-    private String shippingId;
+    private String paymentId;           // ID của payment
+    private String reservationId;       // ID của inventory reservation
+    private String shippingId;          // ID của shipping
+    private String notificationId;      // ID của notification
+    
+    // ID của các request để đảm bảo idempotency
+    private String paymentRequestId;    // ID của payment request
+    private String refundRequestId;     // ID của refund request
+    private String reserveRequestId;    // ID của inventory reserve request
+    private String releaseRequestId;    // ID của inventory release request
+    private String shippingRequestId;   // ID của shipping request
+    private String cancelShippingRequestId; // ID của cancel shipping request
     
     // Metadata
     private LocalDateTime startTime;
     private String status;
     private String lastError;
-    
-    @Builder.Default
-    private Map<String, Object> payload = new HashMap<>();
     
     /**
      * Lấy ID tham chiếu đến payment service

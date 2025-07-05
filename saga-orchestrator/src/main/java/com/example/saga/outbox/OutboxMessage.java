@@ -46,4 +46,16 @@ public class OutboxMessage {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+    
+    @Column(name = "idempotency_key")
+    private String idempotencyKey;
+    
+    @Column(name = "retry_count")
+    private Integer retryCount = 0;
+    
+    @Column(name = "original_message_id")
+    private UUID originalMessageId;
+    
+    @Column(name = "processed_at")
+    private LocalDateTime processedAt;
 } 

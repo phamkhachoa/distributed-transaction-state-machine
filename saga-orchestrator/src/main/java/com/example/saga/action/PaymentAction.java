@@ -89,14 +89,18 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         var payload = sagaContext.getPayload();
         log.info("Processing payment for order: {}", payload.get("orderId"));
         
+        // Tạo idempotency key duy nhất cho request này
+        String requestId = UUID.randomUUID().toString();
+        
         // Create payment command
         Map<String, Object> paymentCommand = new HashMap<>();
         paymentCommand.put("sagaId", sagaContext.getSagaId());
+        paymentCommand.put("requestId", requestId);  // Thêm requestId
         paymentCommand.put("orderId", payload.get("orderId"));
         paymentCommand.put("userId", payload.get("userId"));
         paymentCommand.put("amount", payload.get("amount"));
         paymentCommand.put("timestamp", LocalDateTime.now());
-        paymentCommand.put("action", "PROCESS");
+        paymentCommand.put("action", "PROCESS_PAYMENT");
         
         // Generate a payment ID
         String paymentId = "PAY-" + UUID.randomUUID().toString().substring(0, 8);
@@ -104,6 +108,7 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
         
         // Store payment ID in saga context
         payload.put("paymentId", paymentId);
+        payload.put("paymentRequestId", requestId);  // Lưu requestId vào context
         
         // Save payment command to outbox
         OutboxMessage outboxMessage = OutboxMessage.builder()
@@ -114,10 +119,12 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
                 .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
                 .routingKey(MessageConfig.PAYMENT_PROCESS_KEY)
                 .status(OutboxMessageStatus.PENDING)
+                .idempotencyKey(requestId)  // Sử dụng requestId làm idempotency key
                 .build();
         outboxService.saveMessage(outboxMessage);
 
-        log.info("Payment command for saga {} saved to outbox.", sagaContext.getSagaId());
+        log.info("Payment command for saga {} saved to outbox with requestId: {}", 
+                sagaContext.getSagaId(), requestId);
     }
     
     /**
@@ -125,17 +132,31 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
      */
     private void compensatePayment(SagaContext sagaContext) throws JsonProcessingException {
         var payload = sagaContext.getPayload();
-        log.info("Compensating payment for order: {}", payload.get("orderId"));
+        String paymentId = (String) payload.get("paymentId");
+        
+        if (paymentId == null) {
+            log.warn("No payment ID found for compensation in saga: {}", sagaContext.getSagaId());
+            return;
+        }
+        
+        log.info("Compensating payment: {} for saga: {}", paymentId, sagaContext.getSagaId());
+        
+        // Tạo idempotency key duy nhất cho request này
+        String requestId = UUID.randomUUID().toString();
         
         // Create refund command
         Map<String, Object> refundCommand = new HashMap<>();
         refundCommand.put("sagaId", sagaContext.getSagaId());
+        refundCommand.put("requestId", requestId);  // Thêm requestId
         refundCommand.put("orderId", payload.get("orderId"));
         refundCommand.put("userId", payload.get("userId"));
-        refundCommand.put("paymentId", payload.get("paymentId"));
+        refundCommand.put("paymentId", paymentId);
         refundCommand.put("amount", payload.get("amount"));
         refundCommand.put("timestamp", LocalDateTime.now());
         refundCommand.put("action", "REFUND");
+        
+        // Lưu requestId vào context
+        payload.put("refundRequestId", requestId);
         
         // Save refund command to outbox
         OutboxMessage outboxMessage = OutboxMessage.builder()
@@ -146,9 +167,11 @@ public class PaymentAction implements Action<SagaStates, SagaEvents> {
                 .exchange(MessageConfig.SAGA_COMMAND_EXCHANGE)
                 .routingKey(MessageConfig.PAYMENT_REFUND_KEY)
                 .status(OutboxMessageStatus.PENDING)
+                .idempotencyKey(requestId)  // Sử dụng requestId làm idempotency key
                 .build();
         outboxService.saveMessage(outboxMessage);
         
-        log.info("Refund command for saga {} saved to outbox.", sagaContext.getSagaId());
+        log.info("Refund command for saga {} saved to outbox with requestId: {}", 
+                sagaContext.getSagaId(), requestId);
     }
 } 

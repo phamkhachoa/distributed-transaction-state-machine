@@ -13,6 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SagaCommand {
-    private UUID sagaId;
+    private String sagaId;
+    private String requestId;  // ID duy nhất cho mỗi request
+    private String action;     // Hành động cụ thể
     private Map<String, Object> payload;
+    private long timestamp;    // Thời gian tạo request
 } 

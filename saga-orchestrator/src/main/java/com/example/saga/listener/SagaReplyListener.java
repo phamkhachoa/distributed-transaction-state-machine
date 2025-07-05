@@ -1,5 +1,9 @@
 package com.example.saga.listener;
 
+import com.example.common.dto.SagaReply;
+import com.example.saga.idempotency.IdempotencyService;
+import com.example.saga.idempotency.ProcessedMessage;
+import com.example.saga.idempotency.ProcessedMessageRepository;
 import com.example.saga.config.MessageConfig;
 import com.example.saga.model.SagaContext;
 import com.example.saga.model.SagaEvents;
@@ -9,8 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Listener for saga reply messages from external services
@@ -21,40 +27,59 @@ import java.util.Map;
 public class SagaReplyListener {
 
     private final SagaOrchestrationService orchestrationService;
+    private final ProcessedMessageRepository processedMessageRepository;
+    private final IdempotencyService idempotencyService;
     private final ObjectMapper objectMapper;
     
     @RabbitListener(queues = MessageConfig.PAYMENT_REPLY_QUEUE)
+    @Transactional
     public void handlePaymentReply(String message) {
         try {
-            Map<String, Object> reply = objectMapper.readValue(message, Map.class);
-            String sagaId = (String) reply.get("sagaId");
-            String status = (String) reply.get("status");
+            SagaReply reply = objectMapper.readValue(message, SagaReply.class);
+            String sagaId = reply.getSagaId();
+            String requestId = reply.getRequestId();
+            boolean success = reply.isSuccess();
             
-            log.info("Received payment reply for saga: {}, status: {}", sagaId, status);
-            
-            // Get saga context
-            SagaContext sagaContext = (SagaContext) orchestrationService.getSagaContext(sagaId);
-            if (sagaContext == null) {
-                log.warn("No saga context found for payment reply: {}", sagaId);
+            // Kiểm tra xem reply đã được xử lý chưa
+            if (processedMessageRepository.existsByRequestId(requestId)) {
+                log.info("Duplicate reply detected: {} for saga: {}", requestId, sagaId);
                 return;
             }
             
-            // Update payment information
-            if (reply.containsKey("paymentId")) {
-                sagaContext.getPayload().put("paymentId", reply.get("paymentId"));
-            }
+            log.info("Received payment reply for saga: {}, success: {}", sagaId, success);
             
-            // Update saga context
-            orchestrationService.updateSagaContext(sagaId, sagaContext);
-            
-            // Send appropriate event based on status
-            if ("SUCCESS".equals(status)) {
-                orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_SUCCESS);
-            } else if ("FAILED".equals(status)) {
-                orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_FAILED);
-            } else if ("TIMEOUT".equals(status)) {
-                orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_TIMEOUT);
-            }
+            // Xử lý reply trong transaction idempotent
+            idempotencyService.executeWithIdempotency(
+                    requestId,
+                    sagaId,
+                    "saga-orchestrator",
+                    "handle-payment-reply",
+                    () -> {
+                        // Get saga context
+                        SagaContext sagaContext = (SagaContext) orchestrationService.getSagaContext(sagaId);
+                        if (sagaContext == null) {
+                            log.warn("No saga context found for payment reply: {}", sagaId);
+                            return null;
+                        }
+                        
+                        // Update payment information
+                        Map<String, Object> payload = reply.getPayload();
+                        if (payload != null && payload.containsKey("paymentId")) {
+                            sagaContext.setPaymentId(payload.get("paymentId").toString());
+                        }
+                        
+                        // Update saga context
+                        orchestrationService.updateSagaContext(sagaId, sagaContext);
+                        
+                        // Send appropriate event based on status
+                        if (success) {
+                            orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_SUCCESS);
+                        } else {
+                            orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_FAILED);
+                        }
+                        
+                        return true;
+                    });
             
         } catch (Exception e) {
             log.error("Error processing payment reply", e);
@@ -62,21 +87,38 @@ public class SagaReplyListener {
     }
     
     @RabbitListener(queues = MessageConfig.PAYMENT_REPLY_QUEUE)
+    @Transactional
     public void handlePaymentCompensationReply(String message) {
         try {
-            Map<String, Object> reply = objectMapper.readValue(message, Map.class);
-            String sagaId = (String) reply.get("sagaId");
-            String status = (String) reply.get("status");
-            String action = (String) reply.get("action");
+            SagaReply reply = objectMapper.readValue(message, SagaReply.class);
+            String sagaId = reply.getSagaId();
+            String requestId = reply.getRequestId();
+            boolean success = reply.isSuccess();
+            String action = (String) reply.getPayload().get("action");
+            
+            // Kiểm tra xem reply đã được xử lý chưa
+            if (processedMessageRepository.existsByRequestId(requestId)) {
+                log.info("Duplicate compensation reply detected: {} for saga: {}", requestId, sagaId);
+                return;
+            }
             
             if ("REFUND".equals(action)) {
-                log.info("Received payment refund reply for saga: {}, status: {}", sagaId, status);
+                log.info("Received payment refund reply for saga: {}, success: {}", sagaId, success);
                 
-                if ("SUCCESS".equals(status)) {
-                    orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_COMPENSATED);
-                } else {
-                    log.error("Payment refund failed for saga: {}", sagaId);
-                }
+                // Xử lý reply trong transaction idempotent
+                idempotencyService.executeWithIdempotency(
+                        requestId,
+                        sagaId,
+                        "saga-orchestrator",
+                        "handle-payment-compensation-reply",
+                        () -> {
+                            if (success) {
+                                orchestrationService.sendEvent(sagaId, SagaEvents.PAYMENT_COMPENSATED);
+                            } else {
+                                log.error("Payment refund failed for saga: {}", sagaId);
+                            }
+                            return true;
+                        });
             }
             
         } catch (Exception e) {
@@ -85,37 +127,59 @@ public class SagaReplyListener {
     }
     
     @RabbitListener(queues = MessageConfig.INVENTORY_REPLY_QUEUE)
+    @Transactional
     public void handleInventoryReply(String message) {
         try {
-            Map<String, Object> reply = objectMapper.readValue(message, Map.class);
-            String sagaId = (String) reply.get("sagaId");
-            String status = (String) reply.get("status");
+            SagaReply reply = objectMapper.readValue(message, SagaReply.class);
+            String sagaId = reply.getSagaId();
+            String requestId = reply.getRequestId();
+            boolean success = reply.isSuccess();
             
-            log.info("Received inventory reply for saga: {}, status: {}", sagaId, status);
-            
-            // Get saga context
-            SagaContext sagaContext = (SagaContext) orchestrationService.getSagaContext(sagaId);
-            if (sagaContext == null) {
-                log.warn("No saga context found for inventory reply: {}", sagaId);
+            // Kiểm tra xem reply đã được xử lý chưa
+            if (processedMessageRepository.existsByRequestId(requestId)) {
+                log.info("Duplicate reply detected: {} for saga: {}", requestId, sagaId);
                 return;
             }
             
-            // Update inventory information
-            if (reply.containsKey("inventoryReservationId")) {
-                sagaContext.getPayload().put("inventoryReservationId", reply.get("inventoryReservationId"));
-            }
+            log.info("Received inventory reply for saga: {}, success: {}", sagaId, success);
             
-            // Update saga context
-            orchestrationService.updateSagaContext(sagaId, sagaContext);
-            
-            // Send appropriate event based on status
-            if ("SUCCESS".equals(status)) {
-                orchestrationService.sendEvent(sagaId, SagaEvents.INVENTORY_RESERVED);
-            } else if ("INSUFFICIENT".equals(status)) {
-                orchestrationService.sendEvent(sagaId, SagaEvents.INVENTORY_INSUFFICIENT);
-            } else if ("FAILED".equals(status)) {
-                orchestrationService.sendEvent(sagaId, SagaEvents.INVENTORY_FAILED);
-            }
+            // Xử lý reply trong transaction idempotent
+            idempotencyService.executeWithIdempotency(
+                    requestId,
+                    sagaId,
+                    "saga-orchestrator",
+                    "handle-inventory-reply",
+                    () -> {
+                        // Get saga context
+                        SagaContext sagaContext = (SagaContext) orchestrationService.getSagaContext(sagaId);
+                        if (sagaContext == null) {
+                            log.warn("No saga context found for inventory reply: {}", sagaId);
+                            return null;
+                        }
+                        
+                        // Update inventory information
+                        Map<String, Object> payload = reply.getPayload();
+                        if (payload != null && payload.containsKey("inventoryReservationId")) {
+                            sagaContext.setReservationId(payload.get("inventoryReservationId").toString());
+                        }
+                        
+                        // Update saga context
+                        orchestrationService.updateSagaContext(sagaId, sagaContext);
+                        
+                        // Send appropriate event based on status
+                        if (success) {
+                            orchestrationService.sendEvent(sagaId, SagaEvents.INVENTORY_RESERVED);
+                        } else {
+                            String reason = reply.getReason();
+                            if ("INSUFFICIENT".equals(reason)) {
+                                orchestrationService.sendEvent(sagaId, SagaEvents.INVENTORY_INSUFFICIENT);
+                            } else {
+                                orchestrationService.sendEvent(sagaId, SagaEvents.INVENTORY_FAILED);
+                            }
+                        }
+                        
+                        return true;
+                    });
             
         } catch (Exception e) {
             log.error("Error processing inventory reply", e);
